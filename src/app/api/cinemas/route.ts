@@ -16,7 +16,7 @@ export async function GET() {
 
   const r = [...cinemas]
     .map((cinema) => cinema.querySelector("header a "))
-    .map((a) => a.textContent) as string[];
+    .map((a) => a?.textContent) as string[];
 
   return Response.json(r, {
     headers: new Headers({
