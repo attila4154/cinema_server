@@ -1,4 +1,3 @@
-// todo: shouldn't be client component
 // todo: use db and server component instead + server actions
 "use client";
 import { useCallback, useEffect, useState } from "react";
@@ -53,7 +52,7 @@ export default function MyCinemas() {
   return (
     <div className="flex gap-2 flex-col relative">
       <h2 className="font-bold text-lg">My Cinemas</h2>
-      {myCinemas.length && (
+      {myCinemas.length !== 0 && (
         <div className="flex flex-col gap-2">
           {myCinemas.map((cinema) => (
             <div key={cinema.id}>
@@ -71,7 +70,8 @@ export default function MyCinemas() {
         </div>
       )}
 
-      {!myCinemas.length && "No cinemas yet"}
+      {myCinemas.length === 0 &&
+        "You don't have any saved cinemas"}
 
       <AllCinemas
         myCinemas={myCinemas}

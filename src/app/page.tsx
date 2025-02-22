@@ -3,8 +3,10 @@ import {
   parseScreenings,
   ScreeningData,
 } from "@/ext/csfd";
+import Link from "next/link";
 import { SearchBar } from "./components/SearchBar";
 import MyCinemas from "./my-cinemas/page";
+import { getAuthState } from "./service/authorizationService";
 
 function ScreeningTimesRow({
   screeningTimes,
@@ -74,6 +76,7 @@ function CinemaScreeningsCard({
 
 export default async function Home() {
   const screeningsData = await parseScreenings();
+  const authState = await getAuthState();
 
   return (
     <>
@@ -91,7 +94,18 @@ export default async function Home() {
             ))}
           </ul>
         </div>
-        <MyCinemas />
+        {authState.loggedIn && <MyCinemas />}
+        {!authState.loggedIn && (
+          <div>
+            To see your list of movies{" "}
+            <Link
+              className="text-zinc-500 underline"
+              href="/authorize/login"
+            >
+              login
+            </Link>
+          </div>
+        )}
       </div>
     </>
   );
