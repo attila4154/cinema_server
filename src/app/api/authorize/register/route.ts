@@ -1,4 +1,8 @@
-import { customerExists } from "@/app/service/customerService";
+import {
+  createCustomer,
+  customerExists,
+} from "@/app/service/customerService";
+import { createJWT } from "@/app/service/encryptionService";
 
 export async function POST(req: Request) {
   const json = await req.json();
@@ -15,5 +19,14 @@ export async function POST(req: Request) {
     );
   }
 
-  return Response.json("ok");
+  const userInfo = await createCustomer({
+    email,
+    password,
+  });
+  const accessToken = createJWT(userInfo);
+
+  return Response.json(userInfo, {
+    status: 200,
+    headers: { "Set-Cookie": `accessToken=${accessToken}` },
+  });
 }

@@ -1,12 +1,23 @@
 "use client";
 
 import { useState } from "react";
+import { authActions } from "@/store/auth";
+import { useDispatch } from "react-redux";
+import { UserInfo } from "@/db/schema";
+import { useRouter } from "next/navigation";
 
-// // todo: not allowalbe to logged in users
+// todo: not allowable to logged in users
+// todo: fetch states
 export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const dispatch = useDispatch();
+  const router = useRouter();
+
+  function login(userInfo: UserInfo) {
+    dispatch(authActions.login(userInfo));
+  }
 
   async function handleSubmit(
     event: React.FormEvent<HTMLFormElement>
@@ -31,8 +42,10 @@ export default function RegisterPage() {
       json.error === "customer_exists"
     ) {
       setErrorMessage(json.errorMessage);
+      return;
     }
-    console.log(json);
+    login({ email: json.email, id: json.id });
+    router.push('/my-cinemas');
   }
 
   function handleEmailChange(
@@ -102,30 +115,3 @@ export default function RegisterPage() {
     </div>
   );
 }
-
-// import { FormEvent } from "react";
-
-// export default function Page() {
-//   async function onSubmit(
-//     event: FormEvent<HTMLFormElement>
-//   ) {
-//     event.preventDefault();
-
-//     const formData = new FormData(event.currentTarget);
-//     const response = await fetch("/api/submit", {
-//       method: "POST",
-//       body: formData,
-//     });
-
-//     // Handle response if necessary
-//     const data = await response.json();
-//     // ...
-//   }
-
-//   return (
-//     <form onSubmit={onSubmit}>
-//       <input type="text" name="name" />
-//       <button type="submit">Submit</button>
-//     </form>
-//   );
-// }

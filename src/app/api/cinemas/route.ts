@@ -1,6 +1,7 @@
 import jsdom from "jsdom";
 // export const dynamic = "force-static"; // caching get responses
 
+// todo: cache the call
 export async function GET() {
   const response = await fetch(
     "https://www.csfd.cz/kino/1-praha/"
