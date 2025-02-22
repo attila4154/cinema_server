@@ -1,13 +1,12 @@
 import { UserInfo } from "@/db/schema";
-import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
+import { cookies } from "next/headers";
 
-export async function getUserInfo(): Promise<
+export async function getAuthState(): Promise<
   { loggedIn: true; user: UserInfo } | { loggedIn: false }
 > {
   const cookieStore = await cookies();
   const accessToken = cookieStore.get("accessToken");
-  // todo: signature check
   if (!accessToken) {
     return { loggedIn: false };
   }
@@ -27,5 +26,5 @@ export async function getUserInfo(): Promise<
 
 export async function removeAccessTokenCookie() {
   const cookieStore = await cookies();
-  cookieStore.delete('accessToken');
+  cookieStore.delete("accessToken");
 }

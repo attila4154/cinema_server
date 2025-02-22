@@ -16,10 +16,15 @@ export const usersTable = pgTable(
     cinemas: integer()
       .array()
       .notNull()
-      .default(sql`{}::integer[]`), // empty list by default
+      .default(sql`'{}'::integer[]`), // empty list by default
   },
   (table) => [index("email_idx").on(table.email)]
 );
+
+export const cinemaTable = pgTable("cinema", {
+  id: integer().primaryKey().notNull(),
+  name: varchar({ length: 128 }).notNull(),
+});
 
 // todo: better to infer from drizzle but id is nullable for some reason
 export type UserInfo = {

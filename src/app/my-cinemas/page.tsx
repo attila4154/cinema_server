@@ -1,41 +1,57 @@
 // todo: shouldn't be client component
-// todo: use db and server component instead
+// todo: use db and server component instead + server actions
 "use client";
 import { useCallback, useEffect, useState } from "react";
-import {
-  addCinemaToLocalStorage,
-  getCinemasFromLocalStorage,
-  removeCinemaFromLocalStorage,
-} from "../util/local_storage";
 import { AllCinemas } from "../components/AllCinemas";
 import { Cinema } from "../util/http";
 
 // todo: move to server component once I can create a user
 // todo: use checkboxes
+// todo: block for not logged in
 export default function MyCinemas() {
-  const [myCinemas, setCinemas] = useState<Cinema[]>([]);
+  const [myCinemas, setMyCinemas] = useState<Cinema[]>([]);
+  const [changed, setChanged] = useState(false);
 
   useEffect(() => {
-    setCinemas(getCinemasFromLocalStorage());
+    async function updateMyCinemas() {
+      const res = await fetch("/api/my-cinemas");
+
+      if (res.status >= 400) return;
+
+      setMyCinemas(await res.json());
+    }
+
+    updateMyCinemas();
   }, []);
 
   const addCinema = useCallback(
     (cinema: Cinema) => {
-      setCinemas((prev) => [...prev, cinema]);
-      addCinemaToLocalStorage(cinema);
+      setMyCinemas((prev) => [...prev, cinema]);
+      setChanged(true);
     },
-    [setCinemas]
+    [setMyCinemas]
   );
 
   function removeCinema(cinema: Cinema) {
-    setCinemas((prev) =>
+    setMyCinemas((prev) =>
       prev.filter((cin) => cin.id !== cinema.id)
     );
-    removeCinemaFromLocalStorage(cinema);
+    setChanged(true);
+  }
+
+  // todo error messages if failed
+  async function saveChanges() {
+    await fetch("/api/my-cinemas", {
+      method: "PUT",
+      body: JSON.stringify(
+        myCinemas.map((cinema) => cinema.id)
+      ),
+    });
+    setChanged(false);
   }
 
   return (
-    <div>
+    <div className="flex gap-2 flex-col">
       <h2 className="font-bold text-lg">My Cinemas</h2>
       {myCinemas.length && (
         <div className="flex flex-col gap-2">
@@ -61,6 +77,15 @@ export default function MyCinemas() {
         myCinemas={myCinemas}
         addCinema={addCinema}
       />
+      <div className="flex justify-end">
+        <button
+          className="bg-slate-200 rounded-md p-2"
+          onClick={saveChanges}
+          disabled={!changed}
+        >
+          Save
+        </button>
+      </div>
     </div>
   );
 }

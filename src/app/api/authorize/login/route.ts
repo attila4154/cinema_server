@@ -1,4 +1,4 @@
-import { getUserByEmailAndPwd } from "@/app/service/customerService";
+import { getUserByEmailAndPwd } from "@/app/service/db/customerService";
 import { createJWT } from "@/app/service/encryptionService";
 
 export async function POST(req: Request) {

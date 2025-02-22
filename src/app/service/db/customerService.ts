@@ -4,7 +4,9 @@ import { eq } from "drizzle-orm";
 import {
   generateRandomSalt,
   hashWithSalt,
-} from "./encryptionService";
+} from "../encryptionService";
+
+// todo: rename to userService
 
 export async function customerExists(
   email: string
@@ -41,8 +43,20 @@ export async function getUserByEmailAndPwd({
 
   return hashWithSalt({ toHash: password, salt }) ===
     hashedPassword
-    ? { result: "ok", userInfo: user[0] }
+    ? {
+        result: "ok",
+        userInfo: { email: user[0].email, id: user[0].id },
+      }
     : { result: "wrong_pwd" };
+}
+
+export async function getUser(id: string) {
+  const user = await db
+    .select()
+    .from(usersTable)
+    .where(eq(usersTable.id, id));
+
+  return user[0];
 }
 
 // todo: sanitize email
@@ -71,3 +85,12 @@ export async function createCustomer({
   return user[0];
 }
 
+export async function updateCinemas(
+  userId: string,
+  cinemaIds: number[]
+) {
+  await db
+    .update(usersTable)
+    .set({ cinemas: cinemaIds })
+    .where(eq(usersTable.id, userId));
+}

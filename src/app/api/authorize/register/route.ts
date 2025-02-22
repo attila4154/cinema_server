@@ -1,7 +1,7 @@
 import {
   createCustomer,
   customerExists,
-} from "@/app/service/customerService";
+} from "@/app/service/db/customerService";
 import { createJWT } from "@/app/service/encryptionService";
 
 export async function POST(req: Request) {

@@ -1,15 +1,17 @@
 import Image from "next/image";
 import Link from "next/link";
-import { getUserInfo } from "../service/authorizationService";
+import { getAuthState } from "../service/authorizationService";
 import { LogoutButton } from "./LogoutButton";
+import { LinkButton } from "./styled/LinkButton";
 
 export async function SideBar() {
-  const authState = await getUserInfo();
+  const authState = await getAuthState();
 
   return (
+    // todo: same buttons width
     <aside className="fixed top-0 left-0 h-full pr-2 bg-slate-700 pt-2 pl-2">
-      <nav className="flex flex-col">
-        <ul>
+      <nav className="flex">
+        <ul className="flex gap-5 flex-col">
           <li>
             <Link href={"/"}>
               <Image
@@ -38,12 +40,14 @@ export async function SideBar() {
           {!authState.loggedIn && (
             <>
               <li>
-                <Link href="/authorize/login">Login</Link>
+                <LinkButton href="/authorize/login">
+                  Login
+                </LinkButton>
               </li>
               <li>
-                <Link href="/authorize/register">
+                <LinkButton href="/authorize/register">
                   Register
-                </Link>
+                </LinkButton>
               </li>
             </>
           )}

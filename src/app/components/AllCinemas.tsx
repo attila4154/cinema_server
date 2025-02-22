@@ -9,28 +9,28 @@ export function AllCinemas({
   addCinema: (arg: Cinema) => void;
 }) {
   // todo: loading state
-  const [allCinemas, setAllCinemas] = useState<Cinema[]>(
-    []
-  );
+  const [otherCinemas, setOtherCinemas] = useState<
+    Cinema[]
+  >([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const cinemas = await fetchCinemasFrontend();
-      setAllCinemas(cinemas.filter(cin => !myCinemas.some(c => c.id === cin.id)));
+      const allCinemas = await fetchCinemasFrontend();
+      setOtherCinemas(
+        allCinemas.filter(
+          (cin) => !myCinemas.some((c) => c.id === cin.id)
+        )
+      );
     };
 
     fetchData();
   }, [myCinemas]);
 
-  const cinemas = allCinemas.filter(
-    (cinema) => !myCinemas.includes(cinema)
-  );
-
   return (
     <>
       <h2 className="font-bold text-lg">All Cinemas</h2>
       <div className="flex flex-col gap-2">
-        {cinemas.map((cinema) => (
+        {otherCinemas.map((cinema) => (
           <div key={cinema.id}>
             <div className="flex justify-between">
               <span>{cinema.name}</span>

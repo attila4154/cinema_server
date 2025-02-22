@@ -15,6 +15,20 @@
       "when": 1740002715505,
       "tag": "0001_demonic_longshot",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1740231358856,
+      "tag": "0002_great_wither",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1740236377681,
+      "tag": "0003_melted_millenium_guard",
+      "breakpoints": true
     }
   ]
 }

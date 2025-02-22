@@ -5,7 +5,7 @@ export function createJWT(userInfo: {
   id: string;
   email: string;
 }) {
-  const token = jwt.sign({ userInfo }, "secret", {
+  const token = jwt.sign(userInfo, "secret", {
     expiresIn: "1h",
   });
 
