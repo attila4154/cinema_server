@@ -1,3 +1,5 @@
+// todo: shouldn't be client component
+// todo: use db and server component instead
 "use client";
 import { useCallback, useEffect, useState } from "react";
 import {
@@ -8,7 +10,7 @@ import {
 import { AllCinemas } from "../components/AllCinemas";
 
 // todo: move to server component once I can create a user
-// todo: use checkboxes 
+// todo: use checkboxes
 export default function MyCinemas() {
   const [myCinemas, setCinemas] = useState<string[]>([]);
 

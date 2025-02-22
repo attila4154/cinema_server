@@ -1,10 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { authActions } from "@/store/auth";
-import { useDispatch } from "react-redux";
-import { UserInfo } from "@/db/schema";
-import { useRouter } from "next/navigation";
 
 // todo: not allowable to logged in users
 // todo: fetch states
@@ -12,12 +8,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const dispatch = useDispatch();
-  const router = useRouter();
-
-  function login(userInfo: UserInfo) {
-    dispatch(authActions.login(userInfo));
-  }
+  // const router = useRouter();
 
   async function handleSubmit(
     event: React.FormEvent<HTMLFormElement>
@@ -42,10 +33,8 @@ export default function LoginPage() {
       return;
     }
 
-    const json = await response.json();
-
-    login({ email: json.email, id: json.id });
-    router.push("/my-cinemas");
+    // todo: this triggers full refresh, which is need to reload the sidebar
+    window.location.replace('/my-cinemas');
   }
 
   function handleEmailChange(

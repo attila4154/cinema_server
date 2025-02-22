@@ -1,21 +1,10 @@
-"use client";
-import {
-  useAppDispatch,
-  useAppSelector,
-} from "@/store/hooks";
-import { authActions } from "@/store/auth";
 import Image from "next/image";
 import Link from "next/link";
+import { getUserInfo } from "../service/authorizationService";
+import { LogoutButton } from "./LogoutButton";
 
-export function SideBar() {
-  const { loggedIn, user } = useAppSelector(
-    (state) => state.auth
-  );
-  const dispatch = useAppDispatch();
-
-  function logout() {
-    dispatch(authActions.logout());
-  }
+export async function SideBar() {
+  const authState = await getUserInfo();
 
   return (
     <aside className="fixed top-0 left-0 h-full pr-2 bg-slate-700 pt-2 pl-2">
@@ -31,22 +20,22 @@ export function SideBar() {
               />
             </Link>
           </li>
-          {loggedIn && (
+          {authState.loggedIn && (
             <>
               <li>
-                <div className="bg-white text-slate-700 font-bold text-4xl size-12 leading-[50px] rounded-full text-center cursor-pointer"
-                title={user?.email}
+                <div
+                  className="bg-white text-slate-700 font-bold text-4xl size-12 leading-[50px] rounded-full text-center cursor-pointer"
+                  title={authState.user.email}
                 >
-
                   A
                 </div>
               </li>
               <li>
-                <button onClick={logout}>Logout</button>
+                <LogoutButton />
               </li>
             </>
           )}
-          {!loggedIn && (
+          {!authState.loggedIn && (
             <>
               <li>
                 <Link href="/authorize/login">Login</Link>

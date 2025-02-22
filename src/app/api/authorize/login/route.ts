@@ -25,7 +25,7 @@ export async function POST(req: Request) {
     return Response.json(res.userInfo, {
       status: 200,
       headers: {
-        "Set-Cookie": `accessToken=${accessToken}`,
+        "Set-Cookie": `accessToken=${accessToken}; Path=/;`,
       },
     });
   }
