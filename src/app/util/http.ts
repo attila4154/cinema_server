@@ -1,6 +1,11 @@
+export type Cinema = {
+  id: number;
+  name: string;
+};
+
 export async function fetchCinemasFrontend() {
   const response = await fetch("/api/cinemas");
-  const res = await response.json();
+  const res = (await response.json()) as Cinema[];
   return res;
 }
 

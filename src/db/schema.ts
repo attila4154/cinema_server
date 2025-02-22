@@ -1,5 +1,7 @@
+import { sql } from "drizzle-orm";
 import {
   index,
+  integer,
   pgTable,
   uuid,
   varchar,
@@ -11,12 +13,16 @@ export const usersTable = pgTable(
     id: uuid().defaultRandom().primaryKey().notNull(),
     email: varchar({ length: 255 }).notNull().unique(),
     password: varchar({ length: 255 }).notNull().unique(),
+    cinemas: integer()
+      .array()
+      .notNull()
+      .default(sql`{}::integer[]`), // empty list by default
   },
   (table) => [index("email_idx").on(table.email)]
 );
 
 // todo: better to infer from drizzle but id is nullable for some reason
 export type UserInfo = {
-  id: string,
-  email: string,
-}
+  id: string;
+  email: string;
+};

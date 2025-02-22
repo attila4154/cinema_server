@@ -10,14 +10,19 @@ export async function GET() {
 
   const doc = new jsdom.JSDOM(html);
   const cinemas = doc.window.document.querySelectorAll(
-    ".box.box-cinema"
+    "section.box.box-cinema"
   );
 
   console.log(cinemas.length);
 
-  const r = [...cinemas]
-    .map((cinema) => cinema.querySelector("header a "))
-    .map((a) => a?.textContent) as string[];
+  const r = [...cinemas].map((cinemaSection) => {
+    const id = +cinemaSection.id.split("-")[1];
+    const name = cinemaSection
+      .querySelector("header a")
+      ?.textContent?.substring(8) as string;
+    return { id, name };
+  });
+  console.log({ r });
 
   return Response.json(r, {
     headers: new Headers({
