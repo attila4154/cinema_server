@@ -32,14 +32,14 @@ export function AllCinemas({
       <div className="flex flex-col gap-2">
         {otherCinemas.map((cinema) => (
           <div key={cinema.id}>
-            <div className="flex justify-between">
-              <span>{cinema.name}</span>
-              <span
+            <div className="flex gap-2">
+              <button
                 className="border rounded-sm px-1 cursor-pointer"
                 onClick={() => addCinema(cinema)}
               >
                 +
-              </span>
+              </button>
+              <span>{cinema.name}</span>
             </div>
           </div>
         ))}

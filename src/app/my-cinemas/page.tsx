@@ -51,20 +51,20 @@ export default function MyCinemas() {
   }
 
   return (
-    <div className="flex gap-2 flex-col">
+    <div className="flex gap-2 flex-col relative">
       <h2 className="font-bold text-lg">My Cinemas</h2>
       {myCinemas.length && (
         <div className="flex flex-col gap-2">
           {myCinemas.map((cinema) => (
             <div key={cinema.id}>
-              <div className="flex justify-between">
-                <span>{cinema.name}</span>
-                <span
+              <div className="flex gap-2">
+                <button
                   className="border rounded-sm px-1 cursor-pointer"
                   onClick={() => removeCinema(cinema)}
                 >
                   -
-                </span>
+                </button>
+                <span>{cinema.name}</span>
               </div>
             </div>
           ))}
@@ -77,9 +77,9 @@ export default function MyCinemas() {
         myCinemas={myCinemas}
         addCinema={addCinema}
       />
-      <div className="flex justify-end">
+      <div className="flex justify-end absolute t-3 -right-0 mr-4">
         <button
-          className="bg-slate-200 rounded-md p-2"
+          className="bg-slate-200 rounded-md p-2 disabled:bg-slate-400"
           onClick={saveChanges}
           disabled={!changed}
         >
