@@ -7,7 +7,6 @@ import {
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useImmer } from "use-immer";
-import MyCinemas from "../my-cinemas/page";
 import { AuthState } from "../service/authorizationService";
 import { Cinema } from "../util/http";
 import { AllCinemas } from "./AllCinemas";
@@ -17,6 +16,7 @@ import {
   Filters,
 } from "./FilterBar";
 import { SearchBar } from "./SearchBar";
+import MyCinemas from "./MyCinemas";
 
 function ScreeningTimesRow({
   screeningTimes,
