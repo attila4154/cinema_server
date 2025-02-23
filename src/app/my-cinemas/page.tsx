@@ -1,5 +1,6 @@
 // todo: use db and server component instead + server actions
 "use client";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { AllCinemas } from "../components/AllCinemas";
 import { Cinema } from "../util/http";
@@ -10,6 +11,7 @@ import { Cinema } from "../util/http";
 export default function MyCinemas() {
   const [myCinemas, setMyCinemas] = useState<Cinema[]>([]);
   const [changed, setChanged] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     async function updateMyCinemas() {
@@ -46,6 +48,7 @@ export default function MyCinemas() {
         myCinemas.map((cinema) => cinema.id)
       ),
     });
+    router.refresh();
     setChanged(false);
   }
 

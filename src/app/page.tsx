@@ -4,9 +4,11 @@ import {
   ScreeningData,
 } from "@/ext/csfd";
 import Link from "next/link";
+import { AllCinemas } from "./components/AllCinemas";
 import { SearchBar } from "./components/SearchBar";
 import MyCinemas from "./my-cinemas/page";
 import { getAuthState } from "./service/authorizationService";
+import { getCinemasForUser } from "./service/db/cinemaService";
 
 function ScreeningTimesRow({
   screeningTimes,
@@ -74,26 +76,47 @@ function CinemaScreeningsCard({
   );
 }
 
+function AllScreenings({
+  screenings,
+}: {
+  screenings: CinemaScreeningData[];
+}) {
+  // todo: sort by the time
+  return (
+    <div>
+      <SearchBar />
+      <ul className="flex flex-col gap-5">
+        {screenings.map((cinemaScreeningData) => (
+          <li key={cinemaScreeningData.cinemaId}>
+            <CinemaScreeningsCard
+              data={cinemaScreeningData}
+            />
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 export default async function Home() {
-  const screeningsData = await parseScreenings();
+  const allScreenings = await parseScreenings();
   const authState = await getAuthState();
+  const userCinemas = authState.loggedIn
+    ? await getCinemasForUser(authState.user.id)
+    : [];
+
+  let userScreenings = allScreenings.filter((s) =>
+    userCinemas.some((cin) => cin.id === s.cinemaId)
+  );
+  if (userScreenings.length === 0) {
+    userScreenings = allScreenings;
+  }
 
   return (
     <>
-      <div className="grid grid-cols-3 pt-56 gap-5">
+      <div className="grid grid-cols-[1fr_2fr_1fr] pt-44 gap-5">
         <div></div>
-        <div>
-          <SearchBar />
-          <ul className="flex flex-col gap-5">
-            {screeningsData.map((cinemaScreeningData) => (
-              <li key={cinemaScreeningData.cinemaId}>
-                <CinemaScreeningsCard
-                  data={cinemaScreeningData}
-                />
-              </li>
-            ))}
-          </ul>
-        </div>
+        <AllScreenings screenings={userScreenings} />
         {authState.loggedIn && <MyCinemas />}
         {!authState.loggedIn && (
           <div>
@@ -104,6 +127,7 @@ export default async function Home() {
             >
               login
             </Link>
+            <AllCinemas myCinemas={[]} addCinema={null} />
           </div>
         )}
       </div>

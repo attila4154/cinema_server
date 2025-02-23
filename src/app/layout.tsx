@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
 import { SideBar } from "./components/SideBar";
+import "./globals.css";
 // import StoreProvider from "@/store/StoreProvider";
 
 const geistSans = Geist({
@@ -27,12 +27,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased text-xl00`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased text-lg h-[100vh]`}
       >
-        {/* <StoreProvider> */}
-        <SideBar />
-        <div className="flex items-center justify-center min-w-96">
-          {children}
+        <div
+          className="grid grid-cols-[100px_1fr]"
+          style={{ height: "inherit" }}
+        >
+          {/* <StoreProvider> */}
+          <SideBar />
+          <div className="flex items-center justify-center min-w-96">
+            {children}
+          </div>
         </div>
         {/* </StoreProvider> */}
       </body>

@@ -11,7 +11,7 @@ export function LinkButton({
 }: LinkButtonProps) {
   return (
     <Link
-      className="bg-slate-200 rounded-md p-2"
+      className="bg-slate-200 rounded-md p-2 flex-1"
       {...props}
     >
       {children}

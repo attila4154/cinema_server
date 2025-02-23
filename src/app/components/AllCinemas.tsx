@@ -1,12 +1,13 @@
+"use client";
 import { useEffect, useState } from "react";
 import { Cinema, fetchCinemasFrontend } from "../util/http";
 
 export function AllCinemas({
-  myCinemas,
-  addCinema,
+  myCinemas = [],
+  addCinema = null,
 }: {
   myCinemas: Cinema[];
-  addCinema: (arg: Cinema) => void;
+  addCinema: ((arg: Cinema) => void) | null;
 }) {
   // todo: loading state
   const [otherCinemas, setOtherCinemas] = useState<
@@ -33,12 +34,14 @@ export function AllCinemas({
         {otherCinemas.map((cinema) => (
           <div key={cinema.id}>
             <div className="flex gap-2">
-              <button
-                className="border rounded-sm px-1 cursor-pointer"
-                onClick={() => addCinema(cinema)}
-              >
-                +
-              </button>
+              {addCinema && (
+                <button
+                  className="border rounded-sm px-1 cursor-pointer"
+                  onClick={() => addCinema(cinema)}
+                >
+                  +
+                </button>
+              )}
               <span>{cinema.name}</span>
             </div>
           </div>
