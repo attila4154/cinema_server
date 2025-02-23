@@ -12,7 +12,7 @@ export async function SideBar() {
     // <aside className="fixed top-0 left-0 h-full pr-2 bg-slate-700 pt-2 pl-2">
     <aside className="h-full bg-slate-700 pt-2 flex justify-center items-start">
       <nav className="flex">
-        <ul className="flex gap-5 flex-col justify-center items-center">
+        <ul className="flex gap-5 flex-col items-center">
           <li>
             <Link href={"/"}>
               <Image

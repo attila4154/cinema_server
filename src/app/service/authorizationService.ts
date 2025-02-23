@@ -1,10 +1,12 @@
 import { UserInfo } from "@/db/schema";
-import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
+import { cookies } from "next/headers";
 
-export async function getAuthState(): Promise<
-  { loggedIn: true; user: UserInfo } | { loggedIn: false }
-> {
+export type AuthState =
+  | { loggedIn: true; user: UserInfo }
+  | { loggedIn: false };
+
+export async function getAuthState(): Promise<AuthState> {
   const cookieStore = await cookies();
   const accessToken = cookieStore.get("accessToken");
   if (!accessToken) {
@@ -16,7 +18,7 @@ export async function getAuthState(): Promise<
       accessToken.value,
       "secret"
     );
-    return { loggedIn: true, user: userInfo as UserInfo};
+    return { loggedIn: true, user: userInfo as UserInfo };
   } catch (e) {
     console.log("incorrect token", e);
     return { loggedIn: false };

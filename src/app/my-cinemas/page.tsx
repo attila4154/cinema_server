@@ -1,40 +1,48 @@
-// todo: use db and server component instead + server actions
 "use client";
-import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { AllCinemas } from "../components/AllCinemas";
 import { Cinema } from "../util/http";
 
-// todo: move to server component once I can create a user
+type Props = {
+  userCinemas: Cinema[];
+  setUserCinemas: Dispatch<SetStateAction<Cinema[]>>;
+};
+
 // todo: use checkboxes
-// todo: block for not logged in
-export default function MyCinemas() {
-  const [myCinemas, setMyCinemas] = useState<Cinema[]>([]);
+export default function MyCinemas({
+  userCinemas,
+  setUserCinemas,
+}: Props) {
   const [changed, setChanged] = useState(false);
-  const router = useRouter();
 
   useEffect(() => {
-    async function updateMyCinemas() {
+    async function init() {
       const res = await fetch("/api/my-cinemas");
 
       if (res.status >= 400) return;
 
-      setMyCinemas(await res.json());
+      setUserCinemas(await res.json());
     }
 
-    updateMyCinemas();
-  }, []);
+    init();
+  }, [setUserCinemas]);
 
   const addCinema = useCallback(
     (cinema: Cinema) => {
-      setMyCinemas((prev) => [...prev, cinema]);
+      setUserCinemas((prev) => [...prev, cinema]);
       setChanged(true);
     },
-    [setMyCinemas]
+    [setUserCinemas]
   );
 
   function removeCinema(cinema: Cinema) {
-    setMyCinemas((prev) =>
+    setUserCinemas((prev) =>
       prev.filter((cin) => cin.id !== cinema.id)
     );
     setChanged(true);
@@ -45,19 +53,18 @@ export default function MyCinemas() {
     await fetch("/api/my-cinemas", {
       method: "PUT",
       body: JSON.stringify(
-        myCinemas.map((cinema) => cinema.id)
+        userCinemas.map((cinema) => cinema.id)
       ),
     });
-    router.refresh();
     setChanged(false);
   }
 
   return (
     <div className="flex gap-2 flex-col relative">
       <h2 className="font-bold text-lg">My Cinemas</h2>
-      {myCinemas.length !== 0 && (
+      {userCinemas.length !== 0 && (
         <div className="flex flex-col gap-2">
-          {myCinemas.map((cinema) => (
+          {userCinemas.map((cinema) => (
             <div key={cinema.id}>
               <div className="flex gap-2">
                 <button
@@ -73,11 +80,11 @@ export default function MyCinemas() {
         </div>
       )}
 
-      {myCinemas.length === 0 &&
+      {userCinemas.length === 0 &&
         "You don't have any saved cinemas"}
 
       <AllCinemas
-        myCinemas={myCinemas}
+        myCinemas={userCinemas}
         addCinema={addCinema}
       />
       <div className="flex justify-end absolute t-3 -right-0 mr-4">
