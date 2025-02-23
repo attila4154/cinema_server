@@ -82,7 +82,7 @@ export async function parseScreenings() {
 
   console.log("fetching data from csfd");
   const response = await fetch(
-    "https://www.csfd.cz/kino/1-praha/?period=weekend"
+    "https://www.csfd.cz/kino/1-praha/?period=week"
   );
   const html = await response.text();
 

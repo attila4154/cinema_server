@@ -6,11 +6,16 @@ import {
 } from "@/ext/csfd";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useImmer } from "use-immer";
 import MyCinemas from "../my-cinemas/page";
 import { AuthState } from "../service/authorizationService";
 import { Cinema } from "../util/http";
 import { AllCinemas } from "./AllCinemas";
-import { FilterBar } from "./FilterBar";
+import {
+  applyFilters,
+  FilterBar,
+  Filters,
+} from "./FilterBar";
 import { SearchBar } from "./SearchBar";
 
 function ScreeningTimesRow({
@@ -110,29 +115,47 @@ export function HomePageClient({
   authState: AuthState;
   userCinemas: Cinema[];
 }) {
-  const [screenings, setScreenings] = useState(
+  const [screenings, setScreenings] = useImmer(
     initialScreenings
   );
   const [cinemas, setCinemas] = useState(
     initialUserCinemas
   );
+  const [filters, setFilters] = useState<Filters>({
+    groupBy: "cinema",
+    datesSelect: "today",
+  });
 
   useEffect(() => {
     if (cinemas.length) {
-      setScreenings(
-        initialScreenings.filter((s) =>
-          cinemas.some((c) => c.id === s.cinemaId)
-        )
-      );
+      setFilters((prev) => ({
+        ...prev,
+        cinemas: [...cinemas],
+      }));
     } else {
-      setScreenings(initialScreenings);
+      setFilters((prev) => ({
+        ...prev,
+        cinemas: [],
+      }));
     }
-  }, [cinemas, initialScreenings]);
+  }, [cinemas, initialScreenings, setScreenings]);
+
+  useEffect(() => {
+    setScreenings(() =>
+      applyFilters(
+        structuredClone(initialScreenings),
+        filters
+      )
+    );
+  }, [filters, setScreenings, initialScreenings, cinemas]);
 
   return (
     <>
       <div className="grid grid-cols-[1fr_2fr_1fr] pt-44 gap-5">
-        <FilterBar />
+        <FilterBar
+          filters={filters}
+          setFilters={setFilters}
+        />
         <AllScreenings screenings={screenings} />
         {authState.loggedIn && (
           <MyCinemas
