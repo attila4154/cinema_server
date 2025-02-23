@@ -8,7 +8,3 @@ export async function fetchCinemasFrontend() {
   const res = (await response.json()) as Cinema[];
   return res;
 }
-
-// export async function fetchTodaysScreenings(): Screening[] {
-
-// }

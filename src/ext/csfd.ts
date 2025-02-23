@@ -53,8 +53,6 @@ function extractScreeningData(dayScreening: Element) {
   return screenings;
 }
 
-export type ScreeningList = {};
-
 export type ScreeningData = {
   date: string;
   screenings: {

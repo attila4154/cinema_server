@@ -2,7 +2,7 @@ import { getAuthState } from "@/app/service/authorizationService";
 import { getCinemasForUser } from "@/app/service/db/cinemaService";
 import { updateCinemas } from "@/app/service/db/customerService";
 
-export async function GET(req: Request) {
+export async function GET() {
   const authState = await getAuthState();
 
   if (!authState.loggedIn) {

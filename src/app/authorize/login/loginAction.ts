@@ -6,6 +6,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export async function submitLoginForm(
+  /* eslint-disable @typescript-eslint/no-explicit-any */
   state: any,
   formData: FormData
 ) {
