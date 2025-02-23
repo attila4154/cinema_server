@@ -46,11 +46,16 @@ function DateScreenings({ data }: { data: ScreeningData }) {
         <div className="flex flex-col gap-2">
           {data.screenings.map((screening, idx) => (
             <div key={idx}>
-              <div className="text-2xl">
-                {screening.filmName}
-                {screening.language === "cz" && " (CZ)"}
-                {screening.language === "dubbed" &&
-                  " (Dub)"}
+              <div className="text-2xl text-red-400">
+                <Link
+                  href={`https://www.csfd.cz/film/${screening.filmId}`}
+                  target="_blank"
+                >
+                  {screening.filmName}
+                  {screening.language === "cz" && " (CZ)"}
+                  {screening.language === "dubbed" &&
+                    " (Dub)"}
+                </Link>
               </div>
               <ScreeningTimesRow
                 screeningTimes={screening.screeningTimes}
