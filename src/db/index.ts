@@ -1,21 +1,16 @@
-// import { neon } from "@neondatabase/serverless";
 import "dotenv/config";
-// import { drizzle as drizzleNeon } from "drizzle-orm/neon-http";
-import { drizzle as drizzlePg } from "drizzle-orm/vercel-postgres";
+import { drizzle as drizzlePg } from "drizzle-orm/node-postgres";
 
 // todo: implement connection pool instead
 
-// let db;
-// if (process.env.CONNECT_TO_PROD_DB === "true") {
-//   const sql = neon(process.env.DATABASE_URL!);
-//   db = drizzleNeon({ client: sql });
-// } else {
-  const db = drizzlePg({
-    connection: {
-      connectionString: process.env.DATABASE_URL!,
-      ssl: true,
-    },
-  });
-// }
-
-export { db };
+// let db: NeonHttpDatabase; //|NodePgDatabase;
+export const db = drizzlePg({
+  connection: {
+    connectionString: process.env.DATABASE_URL!,
+    ssl: false,
+  },
+});
+// ? (() => {
+//     const sql = neon(process.env.DATABASE_URL!);
+//     return drizzleNeon({ client: sql });
+//   })()
