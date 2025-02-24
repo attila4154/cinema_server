@@ -6,7 +6,6 @@ import {
 } from "@/ext/csfd";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useImmer } from "use-immer";
 import { AuthState } from "../service/authorizationService";
 import { Cinema } from "../util/http";
 import {
@@ -121,16 +120,20 @@ export function HomePageClient({
   initialUserCinemaIds: number[];
   allCinemas: Cinema[];
 }) {
-  const [screenings, setScreenings] = useImmer(
-    initialScreenings
-  );
   const [userCinemaIds, setUserCinemaIds] = useState(
     initialUserCinemaIds
   );
   const [filters, setFilters] = useState<Filters>({
     groupBy: "cinema",
     datesSelect: "today",
+    cinemas: initialUserCinemaIds
   });
+  const [screenings, setScreenings] = useState(
+    applyFilters(
+      structuredClone(initialScreenings),
+      filters
+    )
+  );
 
   useEffect(() => {
     if (userCinemaIds.length) {
@@ -146,6 +149,7 @@ export function HomePageClient({
     }
   }, [userCinemaIds, initialScreenings, setScreenings]);
 
+  // todo: shouldn't run on the first render
   useEffect(() => {
     setScreenings(() =>
       applyFilters(
