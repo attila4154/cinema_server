@@ -1,8 +1,8 @@
 "use client";
 
 import { useActionState } from "react";
-import { SubmitButton } from "../login/page";
 import { submitRegisterForm } from "./action";
+import { SubmitButton } from "@/app/components/SubmitButton";
 
 // todo: not allowable to logged in users
 // todo: fetch states

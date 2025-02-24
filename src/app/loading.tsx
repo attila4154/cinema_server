@@ -4,10 +4,10 @@ export default function Loading() {
   return (
     // todo: to center vertically
     <Image
-      src="/Loading_icon.gif"
+      src="/loading.gif"
       alt=""
-      width={100}
-      height={100}
+      width={50}
+      height={50}
     />
   );
 }
