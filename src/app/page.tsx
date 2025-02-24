@@ -3,6 +3,7 @@ import { HomePageClient } from "./components/HomePageClient";
 import { getAuthState } from "./service/authorizationService";
 import { getCinemasForUser } from "./service/db/cinemaService";
 
+// todo: promise all!!!
 export default async function Home() {
   const allScreenings = await parseScreenings();
   const allCinemas = allScreenings.map((s) => ({

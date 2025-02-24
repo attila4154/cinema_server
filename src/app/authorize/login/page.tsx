@@ -1,20 +1,30 @@
 "use client";
 // todo: not allowable to logged in users
 
+import Image from "next/image";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import { submitLoginForm } from "./loginAction";
 
-function SubmitButton() {
+export function SubmitButton() {
   const { pending } = useFormStatus();
 
   return (
     <button
       type="submit"
-      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
+      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full flex items-center justify-center"
       disabled={pending}
     >
-      {pending ? "Submitting..." : "Submit"}
+      {pending ? (
+        <Image
+          src="/loading.gif"
+          alt=""
+          width={28}
+          height={28}
+        />
+      ) : (
+        "Submit"
+      )}
     </button>
   );
 }
@@ -71,8 +81,8 @@ export default function LoginPage() {
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 focus:outline-none focus:shadow-outline"
             required
           />
-          <SubmitButton />
         </div>
+        <SubmitButton />
       </form>
     </div>
   );

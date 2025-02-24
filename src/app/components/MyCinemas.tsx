@@ -38,7 +38,8 @@ export default function MyCinemas({
     setChanged(true);
   }
 
-  // todo error messages if failed
+  // todo: error messages if failed
+  // todo: move to server function
   async function saveChanges() {
     await fetch("/api/my-cinemas", {
       method: "PUT",
@@ -87,13 +88,6 @@ export default function MyCinemas({
         ))}
       </div>
 
-      {/* {userCinemas.length === 0 &&
-        "You don't have any saved cinemas"} */}
-
-      {/* <AllCinemas
-        myCinemas={userCinemas}
-        addCinema={addCinema} */}
-      {/* /> */}
       {authState.loggedIn && (
         <div className="flex justify-end absolute t-3 -right-0 mr-4">
           <button

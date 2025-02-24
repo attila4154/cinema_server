@@ -10,23 +10,6 @@ export async function submitLoginForm(
   state: any,
   formData: FormData
 ) {
-  // await new Promise((resolve) => {
-  //   setTimeout(resolve, 1000);
-  // });
-  // console.log("from action", state);
-  // console.log("from action", formData);
-  // const data = {
-  //   email: formData.get("email"),
-  //   password: formData.get("password"),
-  // };
-  // console.log("from action", data);
-  // const result = LoginFormDataSchema.safeParse(data);
-  // console.log("form action", result);
-
-  // if (result.success) {
-  //   return { data: result.data };
-  // }
-
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
 
