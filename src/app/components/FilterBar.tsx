@@ -1,7 +1,6 @@
 import { CinemaScreeningData, Language } from "@/ext/csfd";
 import moment from "moment";
 import { Dispatch, SetStateAction } from "react";
-import { Cinema } from "../util/http";
 
 type DatesSelect = "today" | "tomorrow" | "next-week";
 
@@ -12,7 +11,7 @@ export type Filters = {
   datesSelect: DatesSelect;
   country?: string;
   groupBy?: "cinema" | "film";
-  cinemas?: Cinema[];
+  cinemas?: number[];
 };
 
 function applyDateSelect(
@@ -72,13 +71,13 @@ function applyLanguageFilter(
 
 function applyCinemasFilter(
   screenings: CinemaScreeningData[],
-  cinemas: Cinema[] | undefined
+  cinemas: number[] | undefined
 ) {
   if (!cinemas || !cinemas.length) {
     return screenings;
   }
   return screenings.filter((data) =>
-    cinemas.some((cin) => cin.id === data.cinemaId)
+    cinemas.some((cin) => cin === data.cinemaId)
   );
 }
 

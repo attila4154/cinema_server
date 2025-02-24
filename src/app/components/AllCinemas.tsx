@@ -1,52 +1,37 @@
-"use client";
-import { useEffect, useState } from "react";
-import { Cinema, fetchCinemasFrontend } from "../util/http";
+// "use client";
+// import { useEffect, useState } from "react";
+// import { Cinema, fetchCinemasFrontend } from "../util/http";
 
-export function AllCinemas({
-  myCinemas = [],
-  addCinema = null,
-}: {
-  myCinemas: Cinema[];
-  addCinema: ((arg: Cinema) => void) | null;
-}) {
-  // todo: loading state
-  const [otherCinemas, setOtherCinemas] = useState<
-    Cinema[]
-  >([]);
+// export function AllCinemas({
+//   myCinemas = [],
+//   addCinema = null,
+// }: {
+//   myCinemas: Cinema[];
+//   addCinema: ((arg: Cinema) => void) | null;
+// }) {
+//   // todo: loading state
+//   const [otherCinemas, setOtherCinemas] = useState<
+//     Cinema[]
+//   >([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const allCinemas = await fetchCinemasFrontend();
-      setOtherCinemas(
-        allCinemas.filter(
-          (cin) => !myCinemas.some((c) => c.id === cin.id)
-        )
-      );
-    };
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       const allCinemas = await fetchCinemasFrontend();
+//       setOtherCinemas(
+//         allCinemas.filter(
+//           (cin) =>
+//             !myCinemas.some(
+//               (c) => c.cinemaId === cin.cinemaId
+//             )
+//         )
+//       );
+//     };
 
-    fetchData();
-  }, [myCinemas]);
+//     fetchData();
+//   }, [myCinemas]);
 
-  return (
-    <>
-      <h2 className="font-bold text-lg">All Cinemas</h2>
-      <div className="flex flex-col gap-2">
-        {otherCinemas.map((cinema) => (
-          <div key={cinema.id}>
-            <div className="flex gap-2">
-              {addCinema && (
-                <button
-                  className="border rounded-sm px-1 cursor-pointer"
-                  onClick={() => addCinema(cinema)}
-                >
-                  +
-                </button>
-              )}
-              <span>{cinema.name}</span>
-            </div>
-          </div>
-        ))}
-      </div>
-    </>
-  );
-}
+//   return (
+//     <>
+//     </>
+//   );
+// }

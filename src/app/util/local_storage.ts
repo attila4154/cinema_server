@@ -20,6 +20,8 @@ export function removeCinemaFromLocalStorage(
   const cinemas = getCinemasFromLocalStorage();
   window.localStorage.setItem(
     "my_cinemas",
-    JSON.stringify(cinemas.filter((c) => c.id !== cinema.id))
+    JSON.stringify(
+      cinemas.filter((c) => c.cinemaId !== cinema.cinemaId)
+    )
   );
 }

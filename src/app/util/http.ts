@@ -1,6 +1,6 @@
 export type Cinema = {
-  id: number;
-  name: string;
+  cinemaId: number;
+  cinemaName: string;
 };
 
 export async function fetchCinemasFrontend() {

@@ -9,14 +9,13 @@ import { useEffect, useState } from "react";
 import { useImmer } from "use-immer";
 import { AuthState } from "../service/authorizationService";
 import { Cinema } from "../util/http";
-import { AllCinemas } from "./AllCinemas";
 import {
   applyFilters,
   FilterBar,
   Filters,
 } from "./FilterBar";
-import { SearchBar } from "./SearchBar";
 import MyCinemas from "./MyCinemas";
+import { SearchBar } from "./SearchBar";
 
 function ScreeningTimesRow({
   screeningTimes,
@@ -114,17 +113,19 @@ function AllScreenings({
 export function HomePageClient({
   initialScreenings,
   authState,
-  userCinemas: initialUserCinemas,
+  initialUserCinemaIds,
+  allCinemas,
 }: {
   initialScreenings: CinemaScreeningData[];
   authState: AuthState;
-  userCinemas: Cinema[];
+  initialUserCinemaIds: number[];
+  allCinemas: Cinema[];
 }) {
   const [screenings, setScreenings] = useImmer(
     initialScreenings
   );
-  const [cinemas, setCinemas] = useState(
-    initialUserCinemas
+  const [userCinemaIds, setUserCinemaIds] = useState(
+    initialUserCinemaIds
   );
   const [filters, setFilters] = useState<Filters>({
     groupBy: "cinema",
@@ -132,10 +133,10 @@ export function HomePageClient({
   });
 
   useEffect(() => {
-    if (cinemas.length) {
+    if (userCinemaIds.length) {
       setFilters((prev) => ({
         ...prev,
-        cinemas: [...cinemas],
+        cinemas: [...userCinemaIds],
       }));
     } else {
       setFilters((prev) => ({
@@ -143,7 +144,7 @@ export function HomePageClient({
         cinemas: [],
       }));
     }
-  }, [cinemas, initialScreenings, setScreenings]);
+  }, [userCinemaIds, initialScreenings, setScreenings]);
 
   useEffect(() => {
     setScreenings(() =>
@@ -152,7 +153,12 @@ export function HomePageClient({
         filters
       )
     );
-  }, [filters, setScreenings, initialScreenings, cinemas]);
+  }, [
+    filters,
+    setScreenings,
+    initialScreenings,
+    userCinemaIds,
+  ]);
 
   return (
     <>
@@ -162,24 +168,12 @@ export function HomePageClient({
           setFilters={setFilters}
         />
         <AllScreenings screenings={screenings} />
-        {authState.loggedIn && (
-          <MyCinemas
-            userCinemas={cinemas}
-            setUserCinemas={setCinemas}
-          />
-        )}
-        {!authState.loggedIn && (
-          <div>
-            To see your list of movies{" "}
-            <Link
-              className="text-zinc-500 underline"
-              href="/authorize/login"
-            >
-              login
-            </Link>
-            <AllCinemas myCinemas={[]} addCinema={null} />
-          </div>
-        )}
+        <MyCinemas
+          allCinemas={allCinemas}
+          userCinemaIds={userCinemaIds}
+          setUserCinemaIds={setUserCinemaIds}
+          authState={authState}
+        />
       </div>
     </>
   );

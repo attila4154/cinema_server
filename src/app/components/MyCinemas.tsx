@@ -1,49 +1,39 @@
 "use client";
-import {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
-import { AllCinemas } from "../components/AllCinemas";
+import { Dispatch, SetStateAction, useState } from "react";
+import { AuthState } from "../service/authorizationService";
 import { Cinema } from "../util/http";
 
 type Props = {
-  userCinemas: Cinema[];
-  setUserCinemas: Dispatch<SetStateAction<Cinema[]>>;
+  userCinemaIds: number[];
+  setUserCinemaIds: Dispatch<SetStateAction<number[]>>;
+  allCinemas: Cinema[];
+  authState: AuthState;
 };
 
 // todo: use checkboxes
 export default function MyCinemas({
-  userCinemas,
-  setUserCinemas,
+  userCinemaIds,
+  setUserCinemaIds,
+  allCinemas,
+  authState,
 }: Props) {
   const [changed, setChanged] = useState(false);
 
-  useEffect(() => {
-    async function init() {
-      const res = await fetch("/api/my-cinemas");
-
-      if (res.status >= 400) return;
-
-      setUserCinemas(await res.json());
-    }
-
-    init();
-  }, [setUserCinemas]);
-
-  const addCinema = useCallback(
-    (cinema: Cinema) => {
-      setUserCinemas((prev) => [...prev, cinema]);
-      setChanged(true);
-    },
-    [setUserCinemas]
+  const userCinemas = allCinemas.filter((cin) =>
+    userCinemaIds.some((id) => id === cin.cinemaId)
+  );
+  const otherCinemas = allCinemas.filter(
+    ({ cinemaId }) => !userCinemaIds.includes(cinemaId)
   );
 
+  function addCinema(cinema: Cinema) {
+    setUserCinemaIds((prev) => [cinema.cinemaId, ...prev]);
+    setChanged(true);
+  }
+
   function removeCinema(cinema: Cinema) {
-    setUserCinemas((prev) =>
-      prev.filter((cin) => cin.id !== cinema.id)
+    setUserCinemaIds((prev) =>
+      prev.filter((cin) => cin !== cinema.cinemaId)
     );
     setChanged(true);
   }
@@ -52,9 +42,7 @@ export default function MyCinemas({
   async function saveChanges() {
     await fetch("/api/my-cinemas", {
       method: "PUT",
-      body: JSON.stringify(
-        userCinemas.map((cinema) => cinema.id)
-      ),
+      body: JSON.stringify(userCinemaIds),
     });
     setChanged(false);
   }
@@ -65,7 +53,7 @@ export default function MyCinemas({
       {userCinemas.length !== 0 && (
         <div className="flex flex-col gap-2">
           {userCinemas.map((cinema) => (
-            <div key={cinema.id}>
+            <div key={cinema.cinemaId}>
               <div className="flex gap-2">
                 <button
                   className="border rounded-sm px-1 cursor-pointer"
@@ -73,29 +61,50 @@ export default function MyCinemas({
                 >
                   -
                 </button>
-                <span>{cinema.name}</span>
+                <span>{cinema.cinemaName}</span>
               </div>
             </div>
           ))}
         </div>
       )}
 
-      {userCinemas.length === 0 &&
-        "You don't have any saved cinemas"}
-
-      <AllCinemas
-        myCinemas={userCinemas}
-        addCinema={addCinema}
-      />
-      <div className="flex justify-end absolute t-3 -right-0 mr-4">
-        <button
-          className="bg-slate-200 rounded-md p-2 disabled:bg-slate-400"
-          onClick={saveChanges}
-          disabled={!changed}
-        >
-          Save
-        </button>
+      <h2 className="font-bold text-lg">All Cinemas</h2>
+      <div className="flex flex-col gap-2">
+        {otherCinemas.map((cinema) => (
+          <div key={cinema.cinemaId}>
+            <div className="flex gap-2">
+              {addCinema && (
+                <button
+                  className="border rounded-sm px-1 cursor-pointer"
+                  onClick={() => addCinema(cinema)}
+                >
+                  +
+                </button>
+              )}
+              <span>{cinema.cinemaName}</span>
+            </div>
+          </div>
+        ))}
       </div>
+
+      {/* {userCinemas.length === 0 &&
+        "You don't have any saved cinemas"} */}
+
+      {/* <AllCinemas
+        myCinemas={userCinemas}
+        addCinema={addCinema} */}
+      {/* /> */}
+      {authState.loggedIn && (
+        <div className="flex justify-end absolute t-3 -right-0 mr-4">
+          <button
+            className="bg-slate-200 rounded-md p-2 disabled:bg-slate-400"
+            onClick={saveChanges}
+            disabled={!changed}
+          >
+            Save
+          </button>
+        </div>
+      )}
     </div>
   );
 }

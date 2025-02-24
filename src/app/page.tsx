@@ -5,8 +5,12 @@ import { getCinemasForUser } from "./service/db/cinemaService";
 
 export default async function Home() {
   const allScreenings = await parseScreenings();
+  const allCinemas = allScreenings.map((s) => ({
+    cinemaId: s.cinemaId,
+    cinemaName: s.cinemaName,
+  }));
   const authState = await getAuthState();
-  const userCinemas = authState.loggedIn
+  const userCinemaIds = authState.loggedIn
     ? await getCinemasForUser(authState.user.id)
     : [];
 
@@ -14,7 +18,8 @@ export default async function Home() {
     <HomePageClient
       initialScreenings={allScreenings}
       authState={authState}
-      userCinemas={userCinemas}
+      initialUserCinemaIds={userCinemaIds}
+      allCinemas={allCinemas}
     />
   );
 }
