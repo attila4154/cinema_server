@@ -1,4 +1,10 @@
-export function SearchBar() {
+import { throttle } from "../util/util";
+
+export function SearchBar({
+  onSearch,
+}: {
+  onSearch: (s: string) => void;
+}) {
   return (
     <div className="flex items-center bg-gray-100 rounded-lg p-2 pt-3 pb-3 mb-4 text-xl">
       <svg
@@ -16,9 +22,15 @@ export function SearchBar() {
         />
       </svg>
       <input
+        onInput={throttle(
+          (e: React.ChangeEvent<HTMLInputElement>) =>
+            onSearch(e.currentTarget.value),
+          1000
+        )}
         type="text"
         placeholder="Search..."
         className="bg-transparent focus:outline-none w-full text-gray-700"
+        // value={search}
       />
     </div>
   );

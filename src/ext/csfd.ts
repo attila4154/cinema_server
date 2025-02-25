@@ -53,14 +53,16 @@ function extractScreeningData(dayScreening: Element) {
   return screenings;
 }
 
+export type OneDayScreening = {
+  filmId: number;
+  filmName: string;
+  language: Language;
+  screeningTimes: string[];
+};
+
 export type ScreeningData = {
   date: string;
-  screenings: {
-    filmId: number;
-    filmName: string;
-    language: Language;
-    screeningTimes: string[];
-  }[];
+  screenings: OneDayScreening[];
 };
 
 export type CinemaScreeningData = {
@@ -80,9 +82,13 @@ export async function parseScreenings() {
 
   console.log("fetching data from csfd");
   const response = await fetch(
-    "https://www.csfd.cz/kino/1-praha/?period=week"
+    "https://www.csfd.cz/kino/1-praha/?period=all"
   );
   const html = await response.text();
+  // console.log(
+  //   "Response size in KB: " +
+  //     Buffer.byteLength(html, "utf8") / 1024
+  // );
 
   const doc = new jsdom.JSDOM(html);
   const cinemas = doc.window.document.querySelectorAll(

@@ -1,8 +1,17 @@
-import { CinemaScreeningData, Language } from "@/ext/csfd";
+import {
+  CinemaScreeningData,
+  Language,
+  OneDayScreening,
+} from "@/ext/csfd";
+import Fuse from "fuse.js";
 import moment from "moment";
 import { Dispatch, SetStateAction } from "react";
 
-type DatesSelect = "today" | "tomorrow" | "next-week";
+type DatesSelect =
+  | "today"
+  | "tomorrow"
+  | "next-week"
+  | "all";
 
 export type Filters = {
   language?: Language | null;
@@ -12,6 +21,7 @@ export type Filters = {
   country?: string;
   groupBy?: "cinema" | "film";
   cinemas?: number[];
+  search?: string;
 };
 
 function applyDateSelect(
@@ -41,6 +51,9 @@ function applyDateSelect(
         return moment()
           .add(7, "days")
           .isAfter(momentScreeningDate);
+      }
+      if (dataSelect === "all") {
+        return true;
       }
       return false;
     }),
@@ -81,11 +94,43 @@ function applyCinemasFilter(
   );
 }
 
+function applySearchFilter(
+  screenings: CinemaScreeningData[],
+  search: string | undefined
+) {
+  if (!search) {
+    return screenings;
+  }
+  function filterScreeningsByFilmName(
+    screenings: OneDayScreening[],
+    search: string
+  ) {
+    const res = new Fuse(screenings, {
+      keys: ["filmName"],
+      shouldSort: false,
+      threshold: 0.3,
+      ignoreDiacritics: true,
+    })
+      .search(search)
+      .map((d) => d.item as OneDayScreening);
+    return res;
+  }
+  return screenings.map((s) => ({
+    ...s,
+    screenings: s.screenings.map((s) => ({
+      ...s,
+      screenings: filterScreeningsByFilmName(
+        s.screenings,
+        search
+      ),
+    })),
+  }));
+}
+
 export function applyFilters(
   screenings: CinemaScreeningData[],
   filters: Filters
 ): CinemaScreeningData[] {
-  console.log("applying filters for ", filters);
   let filtered = applyDateSelect(
     screenings,
     filters.datesSelect
@@ -95,7 +140,9 @@ export function applyFilters(
     filters.language
   );
 
-  return applyCinemasFilter(filtered, filters.cinemas);
+  filtered = applyCinemasFilter(filtered, filters.cinemas);
+  filtered = applySearchFilter(filtered, filters.search);
+  return filtered;
 }
 
 type Props = {
@@ -116,6 +163,10 @@ export function FilterBar({ filters, setFilters }: Props) {
     {
       value: "next-week",
       text: "Next week",
+    },
+    {
+      value: "all",
+      text: "All",
     },
   ];
 

@@ -4,8 +4,9 @@ import {
   CinemaScreeningData,
   ScreeningData,
 } from "@/ext/csfd";
+import moment from "moment";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { AuthState } from "../service/authorizationService";
 import { Cinema } from "../util/http";
 import {
@@ -36,10 +37,22 @@ function ScreeningTimesRow({
 }
 
 function DateScreenings({ data }: { data: ScreeningData }) {
+  const today = moment().format("DD.MM.YYYY");
+  const tomorrow = moment()
+    .add(1, "day")
+    .format("DD.MM.YYYY");
+  // todo: move to variable
+  const date =
+    data.date === today
+      ? "Today"
+      : data.date === tomorrow
+      ? "Tomorrow"
+      : data.date;
+
   return (
     <>
       <div>
-        <div className="text-xl">{data.date}</div>
+        <div className="text-xl">{date}</div>
         <hr />
         <div className="flex flex-col gap-2">
           {data.screenings.map((screening, idx) => (
@@ -89,13 +102,15 @@ function CinemaScreeningsCard({
 
 function AllScreenings({
   screenings,
+  onSearch,
 }: {
   screenings: CinemaScreeningData[];
+  onSearch: (s: string) => void;
 }) {
   // todo: sort by the time
   return (
     <div>
-      <SearchBar />
+      <SearchBar onSearch={onSearch} />
       <ul className="flex flex-col gap-5">
         {screenings.map((cinemaScreeningData) => (
           <li key={cinemaScreeningData.cinemaId}>
@@ -105,6 +120,18 @@ function AllScreenings({
           </li>
         ))}
       </ul>
+    </div>
+  );
+}
+
+function StickyWrapper({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="sticky top-12 overflow-auto h-[100vh]">
+      {children}
     </div>
   );
 }
@@ -126,9 +153,9 @@ export function HomePageClient({
   const [filters, setFilters] = useState<Filters>({
     groupBy: "cinema",
     datesSelect: "today",
-    cinemas: initialUserCinemaIds
+    cinemas: initialUserCinemaIds,
   });
-  const [screenings, setScreenings] = useState(
+  const [screenings, setScreenings] = useState(() =>
     applyFilters(
       structuredClone(initialScreenings),
       filters
@@ -136,6 +163,7 @@ export function HomePageClient({
   );
 
   useEffect(() => {
+    console.log("ue1");
     if (userCinemaIds.length) {
       setFilters((prev) => ({
         ...prev,
@@ -151,6 +179,7 @@ export function HomePageClient({
 
   // todo: shouldn't run on the first render
   useEffect(() => {
+    console.log("ue2");
     setScreenings(() =>
       applyFilters(
         structuredClone(initialScreenings),
@@ -164,20 +193,35 @@ export function HomePageClient({
     userCinemaIds,
   ]);
 
+  const onSearch = useCallback(
+    (search: string) => {
+      console.log("on search parent");
+      setFilters((prev) => ({ ...prev, search }));
+    },
+    [setFilters]
+  );
+
   return (
     <>
-      <div className="grid grid-cols-[1fr_2fr_1fr] pt-44 gap-5">
-        <FilterBar
-          filters={filters}
-          setFilters={setFilters}
+      <div className="grid grid-cols-[1fr_2fr_1fr] pt-12 gap-5">
+        <StickyWrapper>
+          <FilterBar
+            filters={filters}
+            setFilters={setFilters}
+          />
+        </StickyWrapper>
+        <AllScreenings
+          screenings={screenings}
+          onSearch={onSearch}
         />
-        <AllScreenings screenings={screenings} />
-        <MyCinemas
-          allCinemas={allCinemas}
-          userCinemaIds={userCinemaIds}
-          setUserCinemaIds={setUserCinemaIds}
-          authState={authState}
-        />
+        <StickyWrapper>
+          <MyCinemas
+            allCinemas={allCinemas}
+            userCinemaIds={userCinemaIds}
+            setUserCinemaIds={setUserCinemaIds}
+            authState={authState}
+          />
+        </StickyWrapper>
       </div>
     </>
   );
