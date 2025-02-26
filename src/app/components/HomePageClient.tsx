@@ -37,6 +37,16 @@ function ScreeningTimesRow({
 }
 
 function DateScreenings({ data }: { data: ScreeningData }) {
+  if (
+    data.screenings.length === 0 ||
+    data.screenings.reduce(
+      (cur, s) => cur + s.screeningTimes.length,
+      0
+    ) === 0
+  ) {
+    return <></>;
+  }
+
   const today = moment().format("DD.MM.YYYY");
   const tomorrow = moment()
     .add(1, "day")
@@ -155,6 +165,7 @@ export function HomePageClient({
     datesSelect: "today",
     cinemas: initialUserCinemaIds,
   });
+  // todo: make sure filters are applied on the first render (not in ue) and only once!
   const [screenings, setScreenings] = useState(() =>
     applyFilters(
       structuredClone(initialScreenings),
