@@ -1,4 +1,5 @@
 import jsdom from "jsdom";
+import { unstable_cache } from "next/cache";
 
 // todo: move to util
 function zip<A, B>(a: A[], b: B[]): [A, B][] {
@@ -71,15 +72,15 @@ export type CinemaScreeningData = {
   screenings: ScreeningData[];
 };
 
-// todo: add normal caching
-let result: CinemaScreeningData[] | undefined;
+export const getAllScreenings = unstable_cache(
+  async () => await parseScreenings(),
+  [],
+  {
+    revalidate: 60 * 60,
+  }
+);
 
 export async function parseScreenings() {
-  if (result !== undefined) {
-    console.log("returning csfd data from 'cache'");
-    return result;
-  }
-
   console.log("fetching data from csfd");
   const response = await fetch(
     "https://www.csfd.cz/kino/1-praha/?period=all"
@@ -143,8 +144,6 @@ export async function parseScreenings() {
       screenings: dateWithAllScreenings,
     };
   });
-
-  result = res;
 
   return res;
 }

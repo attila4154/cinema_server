@@ -1,4 +1,4 @@
-import { parseScreenings } from "@/ext/csfd";
+import { getAllScreenings } from "@/ext/csfd";
 import { HomePageClient } from "./components/HomePageClient";
 import {
   AuthState,
@@ -13,10 +13,8 @@ async function getCinemas(authState: AuthState) {
 
 export default async function Home() {
   const authState = await getAuthState();
-  const [allScreenings, userCinemaIds] = await Promise.all([
-    await parseScreenings(),
-    await getCinemas(authState),
-  ]);
+  const userCinemaIds = await getCinemas(authState);
+  const allScreenings = await getAllScreenings();
 
   const allCinemas = allScreenings.map((s) => ({
     cinemaId: s.cinemaId,
