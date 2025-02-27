@@ -17,6 +17,16 @@ import {
 import MyCinemas from "./MyCinemas";
 import { SearchBar } from "./SearchBar";
 
+const weekDays = new Map([
+  [1, "Mo"],
+  [2, "Tu"],
+  [3, "We"],
+  [4, "Th"],
+  [5, "Fr"],
+  [6, "Sa"],
+  [7, "Su"],
+]);
+
 function ScreeningTimesRow({
   screeningTimes,
 }: {
@@ -34,6 +44,11 @@ function ScreeningTimesRow({
       ))}
     </ul>
   );
+}
+
+function formatDate(date: string) {
+  const weekday = moment(date, "DD.MM.YYYY").isoWeekday();
+  return `${date} (${weekDays.get(weekday)})`;
 }
 
 function DateScreenings({ data }: { data: ScreeningData }) {
@@ -57,7 +72,7 @@ function DateScreenings({ data }: { data: ScreeningData }) {
       ? "Today"
       : data.date === tomorrow
       ? "Tomorrow"
-      : data.date;
+      : formatDate(data.date);
 
   return (
     <>
