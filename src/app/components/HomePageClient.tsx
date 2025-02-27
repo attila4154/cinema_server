@@ -64,7 +64,7 @@ function DateScreenings({ data }: { data: ScreeningData }) {
       <div>
         <div className="text-xl">{date}</div>
         <hr />
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 mb-3">
           {data.screenings.map((screening, idx) => (
             <div key={idx}>
               <div className="text-2xl text-red-400">
