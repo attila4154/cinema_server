@@ -10,7 +10,6 @@ type Props = {
   authState: AuthState;
 };
 
-// todo: use checkboxes
 export default function MyCinemas({
   userCinemaIds,
   setUserCinemaIds,
@@ -52,18 +51,22 @@ export default function MyCinemas({
     <div className="flex gap-2 flex-col relative">
       <h2 className="font-bold text-lg">My Cinemas</h2>
       {userCinemas.length !== 0 && (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 justify-start">
           {userCinemas.map((cinema) => (
-            <div key={cinema.cinemaId}>
-              <div className="flex gap-2">
-                <button
-                  className="border rounded-sm px-1 cursor-pointer"
-                  onClick={() => removeCinema(cinema)}
-                >
-                  -
-                </button>
-                <span>{cinema.cinemaName}</span>
-              </div>
+            <div
+              key={cinema.cinemaId}
+              className="flex gap-2 items-center"
+            >
+              <input
+                type="checkbox"
+                id={`cinema-${cinema.cinemaId}`}
+                checked={true}
+                className="w-5 h-5"
+                onChange={() => removeCinema(cinema)}
+              />
+              <label htmlFor={`cinema-${cinema.cinemaId}`}>
+                {cinema.cinemaName}
+              </label>
             </div>
           ))}
         </div>
@@ -72,18 +75,25 @@ export default function MyCinemas({
       <h2 className="font-bold text-lg">All Cinemas</h2>
       <div className="flex flex-col gap-2">
         {otherCinemas.map((cinema) => (
-          <div key={cinema.cinemaId}>
-            <div className="flex gap-2">
-              {addCinema && (
-                <button
-                  className="border rounded-sm px-1 cursor-pointer"
-                  onClick={() => addCinema(cinema)}
-                >
-                  +
-                </button>
-              )}
-              <span>{cinema.cinemaName}</span>
-            </div>
+          <div
+            key={cinema.cinemaId}
+            className="flex gap-2 items-center"
+          >
+            <input
+              type="checkbox"
+              id={`cinema-${cinema.cinemaId}`}
+              checked={false}
+              className="cursor-pointer peer hidden"
+              onChange={() => addCinema(cinema)}
+            />
+            <span className="w-5 h-5 border-2 rounded-sm border-gray-400 peer-hover:border-blue-500"></span>
+
+            <label
+              htmlFor={`cinema-${cinema.cinemaId}`}
+              className="cursor-pointer"
+            >
+              {cinema.cinemaName}
+            </label>
           </div>
         ))}
       </div>
