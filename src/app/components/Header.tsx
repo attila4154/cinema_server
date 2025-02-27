@@ -4,25 +4,12 @@ import { getAuthState } from "../service/authorizationService";
 import { LogoutButton } from "./LogoutButton";
 import { LinkButton } from "./styled/LinkButton";
 
-export async function SideBar() {
+export async function Header() {
   const authState = await getAuthState();
-
   return (
-    // todo: same buttons width
-    // <aside className="fixed top-0 left-0 h-full pr-2 bg-slate-700 pt-2 pl-2">
-    <aside className="h-full bg-slate-700 pt-2 flex justify-center items-start">
-      <nav className="flex">
-        <ul className="flex gap-5 flex-col items-center">
-          <li>
-            <Link href={"/"}>
-              <Image
-                src="/icon.svg"
-                alt="logo"
-                height={50}
-                width={50}
-              />
-            </Link>
-          </li>
+    <header className="flex flex-row bg-slate-500 justify-end items-center">
+      <nav>
+        <ul className="flex flex-row items-center gap-4 mr-4">
           {authState.loggedIn && (
             <>
               <li>
@@ -52,14 +39,19 @@ export async function SideBar() {
               </li>
             </>
           )}
-          {/* <li>First</li>
-          <li>Second</li>
-          <li>Third</li>
-          <li>Fourth</li>
-          <li>Fifth</li>
-          <li>Sixth</li> */}
+
+          <li>
+            <Link href={"/"}>
+              <Image
+                src="/icon.svg"
+                alt="logo"
+                height={50}
+                width={50}
+              />
+            </Link>
+          </li>
         </ul>
       </nav>
-    </aside>
+    </header>
   );
 }
