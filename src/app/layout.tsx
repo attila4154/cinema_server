@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { SideBar } from "./components/SideBar";
+import { Header } from "./components/Header";
 import "./globals.css";
 // import StoreProvider from "@/store/StoreProvider";
 
@@ -29,17 +29,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased text-lg h-[100vh]`}
       >
-        <div
-          className="grid grid-cols-[100px_1fr]"
-          style={{ height: "inherit" }}
-        >
-          {/* <StoreProvider> */}
-          <SideBar />
+        <div className="grid grid-rows-[60px_1fr]">
+          <Header />
           <div className="flex items-center justify-center min-w-96">
             {children}
           </div>
         </div>
-        {/* </StoreProvider> */}
       </body>
     </html>
   );
