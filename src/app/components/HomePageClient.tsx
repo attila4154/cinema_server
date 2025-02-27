@@ -2,11 +2,19 @@
 
 import {
   CinemaScreeningData,
+  OneDayScreening,
   ScreeningData,
 } from "@/ext/csfd";
 import moment from "moment";
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { CSFDMovie } from "node-csfd-api/interfaces/movie.interface";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { AuthState } from "../service/authorizationService";
 import { Cinema } from "../util/http";
 import {
@@ -16,6 +24,11 @@ import {
 } from "./FilterBar";
 import MyCinemas from "./MyCinemas";
 import { SearchBar } from "./SearchBar";
+
+const FilmDataContext = createContext<Map<
+  number,
+  CSFDMovie
+> | null>(null);
 
 function ScreeningTimesRow({
   screeningTimes,
@@ -33,6 +46,37 @@ function ScreeningTimesRow({
         </li>
       ))}
     </ul>
+  );
+}
+
+function FilmScreening({
+  screening,
+}: {
+  screening: OneDayScreening;
+}) {
+  const filmDataById = useContext(FilmDataContext);
+  const filmName =
+    filmDataById
+      ?.get(screening.filmId)
+      ?.titlesOther.filter(
+        (t) => t.country === "US" || t.country === "USA"
+      )[0]?.title ?? screening.filmName;
+  return (
+    <>
+      <div className="text-2xl text-red-400">
+        <Link
+          href={`https://www.csfd.cz/film/${screening.filmId}`}
+          target="_blank"
+        >
+          {filmName}
+          {screening.language === "cz" && " (CZ)"}
+          {screening.language === "dubbed" && " (Dub)"}
+        </Link>
+      </div>
+      <ScreeningTimesRow
+        screeningTimes={screening.screeningTimes}
+      />
+    </>
   );
 }
 
@@ -66,22 +110,10 @@ function DateScreenings({ data }: { data: ScreeningData }) {
         <hr />
         <div className="flex flex-col gap-2">
           {data.screenings.map((screening, idx) => (
-            <div key={idx}>
-              <div className="text-2xl text-red-400">
-                <Link
-                  href={`https://www.csfd.cz/film/${screening.filmId}`}
-                  target="_blank"
-                >
-                  {screening.filmName}
-                  {screening.language === "cz" && " (CZ)"}
-                  {screening.language === "dubbed" &&
-                    " (Dub)"}
-                </Link>
-              </div>
-              <ScreeningTimesRow
-                screeningTimes={screening.screeningTimes}
-              />
-            </div>
+            <FilmScreening
+              key={idx}
+              screening={screening}
+            />
           ))}
         </div>
       </div>
@@ -115,6 +147,7 @@ function AllScreenings({
   onSearch,
 }: {
   screenings: CinemaScreeningData[];
+  filmDataById: Map<number, CSFDMovie>;
   onSearch: (s: string) => void;
 }) {
   // todo: sort by the time
@@ -151,11 +184,13 @@ export function HomePageClient({
   authState,
   initialUserCinemaIds,
   allCinemas,
+  filmDataById,
 }: {
   initialScreenings: CinemaScreeningData[];
   authState: AuthState;
   initialUserCinemaIds: number[];
   allCinemas: Cinema[];
+  filmDataById: Map<number, CSFDMovie>;
 }) {
   const [userCinemaIds, setUserCinemaIds] = useState(
     initialUserCinemaIds
@@ -206,14 +241,13 @@ export function HomePageClient({
 
   const onSearch = useCallback(
     (search: string) => {
-      console.log("on search parent");
       setFilters((prev) => ({ ...prev, search }));
     },
     [setFilters]
   );
 
   return (
-    <>
+    <FilmDataContext.Provider value={filmDataById}>
       <div className="grid grid-cols-[1fr_2fr_1fr] pt-12 gap-5">
         <StickyWrapper>
           <FilterBar
@@ -223,6 +257,7 @@ export function HomePageClient({
         </StickyWrapper>
         <AllScreenings
           screenings={screenings}
+          filmDataById={filmDataById}
           onSearch={onSearch}
         />
         <StickyWrapper>
@@ -234,6 +269,6 @@ export function HomePageClient({
           />
         </StickyWrapper>
       </div>
-    </>
+    </FilmDataContext.Provider>
   );
 }

@@ -1,5 +1,7 @@
+import { redis } from "@/redis";
 import jsdom from "jsdom";
-import { unstable_cache } from "next/cache";
+import { csfd } from "node-csfd-api";
+import { CSFDMovie } from "node-csfd-api/interfaces/movie.interface";
 
 // todo: move to util
 function zip<A, B>(a: A[], b: B[]): [A, B][] {
@@ -72,24 +74,90 @@ export type CinemaScreeningData = {
   screenings: ScreeningData[];
 };
 
-export const getAllScreenings = unstable_cache(
-  async () => await parseScreenings(),
-  [],
-  {
-    revalidate: 60 * 60,
-  }
-);
+export type CinemaScreeningDataWithFilmData = [
+  CinemaScreeningData[],
+  Map<number, CSFDMovie>
+];
 
-export async function parseScreenings() {
+// export const getAllScreenings = unstable_cache(
+//   async () => await parseScreenings(),
+//   [],
+//   {
+//     // revalidate: 60 * 60,
+//     revalidate: 10,
+//   }
+// );
+
+export async function getAllScreenings() {
+  if (!redis.exists("screenings")) {
+    try {
+      const res = await parseScreenings();
+      redis.set("screenings", JSON.stringify(res));
+      return res;
+    } catch (e) {
+      console.log(
+        "error occured when getting screenings",
+        e
+      );
+      redis.del("screenings");
+      return null;
+    }
+  }
+
+  const value = redis.get("screenings");
+  console.log("from redis: ", value);
+  return await parseScreenings();
+}
+
+export type FilmData = {
+  title: string;
+  year: number;
+  genres: string[];
+  origins: string[];
+  rating: number;
+  poster: string;
+  titlesOther: { country: string; title: string }[];
+};
+
+async function fetchFilmData(
+  ids: number[]
+): Promise<Map<number, CSFDMovie>> {
+  ids = ids.slice(0, 5);
+  let allData;
+  try {
+    allData = await Promise.all(
+      ids.map((id) => csfd.movie(id))
+    );
+  } catch (e) {
+    console.log('caught error in promise all', e);
+    throw e;
+  }
+  return new Map(zip(ids, allData));
+}
+
+function getAllFilmsIds(screenings: CinemaScreeningData[]) {
+  const uniqueIds = new Set(
+    screenings
+      .map((s) =>
+        s.screenings.map((s) =>
+          s.screenings.map((s) => s.filmId)
+        )
+      )
+      .flat()
+      .flat()
+  );
+  return [...uniqueIds];
+}
+
+// todo: error during fetches
+export async function parseScreenings(): Promise<
+  [CinemaScreeningData[], Map<number, CSFDMovie>]
+> {
   console.log("fetching data from csfd");
   const response = await fetch(
     "https://www.csfd.cz/kino/1-praha/?period=all"
   );
   const html = await response.text();
-  // console.log(
-  //   "Response size in KB: " +
-  //     Buffer.byteLength(html, "utf8") / 1024
-  // );
 
   const doc = new jsdom.JSDOM(html);
   const cinemas = doc.window.document.querySelectorAll(
@@ -145,5 +213,12 @@ export async function parseScreenings() {
     };
   });
 
-  return res;
+  const allFilmsIds = getAllFilmsIds(res);
+  const filmDataById = await fetchFilmData(allFilmsIds);
+
+  // const r = { screeningData: res, filmDataById };
+  // console.log({ filmDataById });
+  console.log("done");
+  // console.log(r);
+  return [res, filmDataById];
 }

@@ -14,19 +14,21 @@ async function getCinemas(authState: AuthState) {
 export default async function Home() {
   const authState = await getAuthState();
   const userCinemaIds = await getCinemas(authState);
-  const allScreenings = await getAllScreenings();
+  const res = await getAllScreenings();
+  // console.log(res);
 
-  const allCinemas = allScreenings.map((s) => ({
+  const allCinemas = res[0].map((s) => ({
     cinemaId: s.cinemaId,
     cinemaName: s.cinemaName,
   }));
 
   return (
     <HomePageClient
-      initialScreenings={allScreenings}
+      initialScreenings={res[0]}
       authState={authState}
       initialUserCinemaIds={userCinemaIds}
       allCinemas={allCinemas}
+      filmDataById={res[1]}
     />
   );
 }
