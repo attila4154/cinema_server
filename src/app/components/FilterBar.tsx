@@ -211,46 +211,50 @@ export function FilterBar({ filters, setFilters }: Props) {
   }
 
   return (
-    <div className="p-5">
-      <label
-        htmlFor="dates-select"
-        className="text-2xl block"
-      >
-        Dates:
-      </label>
-      <select
-        name="dates"
-        id="dates-select"
-        value={filters.datesSelect}
-        className="border rounded-md"
-        onChange={handleSelectDate}
-      >
-        {datesOptions.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.text}
-          </option>
-        ))}
-      </select>
+    <div className="ml-5 mr-5 flex flex-col gap-3">
+      <div className="flex flex-col">
+        <label
+          htmlFor="dates-select"
+          className="text-2xl block"
+        >
+          Dates:
+        </label>
+        <select
+          name="dates"
+          id="dates-select"
+          value={filters.datesSelect}
+          className="border rounded-md p-1"
+          onChange={handleSelectDate}
+        >
+          {datesOptions.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.text}
+            </option>
+          ))}
+        </select>
+      </div>
 
-      <label
-        htmlFor="language-select"
-        className="text-2xl block"
-      >
-        Language:
-      </label>
-      <select
-        name="language"
-        id="language-select"
-        value={filters.language || "all"}
-        className="border rounded-md"
-        onChange={handleSelectLanguage}
-      >
-        {languageOptions.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.text}
-          </option>
-        ))}
-      </select>
+      <div className="flex flex-col">
+        <label
+          htmlFor="language-select"
+          className="text-2xl block"
+        >
+          Language:
+        </label>
+        <select
+          name="language"
+          id="language-select"
+          value={filters.language || "all"}
+          className="border rounded-md p-1"
+          onChange={handleSelectLanguage}
+        >
+          {languageOptions.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.text}
+            </option>
+          ))}
+        </select>
+      </div>
     </div>
   );
 }
