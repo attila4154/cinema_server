@@ -1,10 +1,14 @@
-import { throttle } from "../util/util";
+import { debounce } from "../util/util";
 
 export function SearchBar({
   onSearch,
 }: {
   onSearch: (s: string) => void;
 }) {
+  const debounceSearch = debounce((query: string) => {
+    onSearch(query);
+  }, 150);
+
   return (
     <div className="flex items-center bg-gray-100 rounded-lg p-2 pt-3 pb-3 mb-4 text-xl border-gray-100 border-[2px] hover:border-gray-300">
       <svg
@@ -22,11 +26,9 @@ export function SearchBar({
         />
       </svg>
       <input
-        onInput={throttle(
-          (e: React.ChangeEvent<HTMLInputElement>) =>
-            onSearch(e.currentTarget.value),
-          1000
-        )}
+        onInput={(e) =>
+          debounceSearch(e.currentTarget.value)
+        }
         type="text"
         placeholder="Search..."
         className="bg-transparent focus:outline-none w-full text-gray-700"

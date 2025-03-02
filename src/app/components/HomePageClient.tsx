@@ -7,14 +7,7 @@ import {
 } from "@/ext/csfd";
 import moment from "moment";
 import Link from "next/link";
-import { CSFDMovie } from "node-csfd-api/interfaces/movie.interface";
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { useCallback, useEffect, useState } from "react";
 import { AuthState } from "../service/authorizationService";
 import { Cinema } from "../util/http";
 import {
@@ -34,10 +27,6 @@ const weekDays = new Map([
   [6, "Sa"],
   [7, "Su"],
 ]);
-
-const FilmDataContext = createContext<null | CSFDMovie[]>(
-  null
-);
 
 function ScreeningTimesRow({
   screeningTimes,
@@ -68,15 +57,6 @@ function FilmScreening({
 }: {
   screening: OneDayScreening;
 }) {
-  const filmsData = useContext(FilmDataContext);
-  const filmData = filmsData?.find(
-    (f) => f.id === screening.filmId
-  );
-  const filmName =
-    filmData?.titlesOther.find(
-      (t) => t.country === "US" || t.country === "USA"
-    )?.title || screening.filmName;
-
   return (
     <div>
       <div className="text-2xl text-red-400">
@@ -84,10 +64,10 @@ function FilmScreening({
           href={`https://www.csfd.cz/film/${screening.filmId}`}
           target="_blank"
         >
-          {filmName}
+          {screening.filmName}
           {screening.language === "cz" && " (CZ)"}
           {screening.language === "dubbed" && " (Dub)"}
-          {filmData?.year && ` (${filmData.year})`}
+          {screening?.year && ` (${screening.year})`}
         </Link>
       </div>
       <ScreeningTimesRow
@@ -200,13 +180,11 @@ export function HomePageClient({
   authState,
   initialUserCinemaIds,
   allCinemas,
-  filmData,
 }: {
   initialScreenings: CinemaScreeningData[];
   authState: AuthState;
   initialUserCinemaIds: number[];
   allCinemas: Cinema[];
-  filmData: CSFDMovie[];
 }) {
   const [userCinemaIds, setUserCinemaIds] = useState(
     initialUserCinemaIds
@@ -272,12 +250,10 @@ export function HomePageClient({
             setFilters={setFilters}
           />
         </StickyWrapper>
-        <FilmDataContext.Provider value={filmData}>
-          <AllScreenings
-            screenings={screenings}
-            onSearch={onSearch}
-          />
-        </FilmDataContext.Provider>
+        <AllScreenings
+          screenings={screenings}
+          onSearch={onSearch}
+        />
         <StickyWrapper>
           <MyCinemas
             allCinemas={allCinemas}
