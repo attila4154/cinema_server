@@ -1,4 +1,6 @@
+import { getFilmData } from "@/app/service/db/filmService";
 import jsdom from "jsdom";
+import { CSFDMovie } from "node-csfd-api/interfaces/movie.interface";
 
 // todo: move to util
 function zip<A, B>(a: A[], b: B[]): [A, B][] {
@@ -9,19 +11,24 @@ function zip<A, B>(a: A[], b: B[]): [A, B][] {
 
 export type Language = "cz" | "dubbed" | "subs";
 
-function extractFilmData(screening: Element) {
-  const screeningLink = screening.querySelector(
-    "a.film-title-name"
-  ) as HTMLLinkElement;
-
-  const filmUrl = screeningLink.href;
+function getFilmIdFromLink(link: HTMLLinkElement): number {
+  const filmUrl = link.href;
   const match = filmUrl.match(/\/film\/(\d+)-/);
   if (!match) {
     console.log(filmUrl + " doesn't match the id regex");
     throw new Error("malformed film url: " + filmUrl);
   }
 
-  const filmId = +match[1];
+  return +match[1];
+}
+
+function extractFilmData(screening: Element) {
+  const screeningLink = screening.querySelector(
+    "a.film-title-name"
+  ) as HTMLLinkElement;
+
+  const filmId = getFilmIdFromLink(screeningLink);
+
   const filmName = screeningLink.textContent as string;
   let language: Language;
   const langCol = screening.querySelector(
@@ -57,6 +64,7 @@ export type OneDayScreening = {
   filmId: number;
   filmName: string;
   language: Language;
+  year?: number;
   screeningTimes: string[];
 };
 
@@ -83,6 +91,46 @@ export function getFilmIds(
   return [...new Set(ids)];
 }
 
+export async function getFilmDataFromHtml(
+  doc: jsdom.JSDOM
+): Promise<CSFDMovie[]> {
+  const filmLinks = [
+    ...doc.window.document.querySelectorAll(
+      ".film-title-name"
+    ),
+  ] as HTMLLinkElement[];
+
+  const filmIds = [
+    ...new Set(
+      filmLinks.map((link) => getFilmIdFromLink(link))
+    ),
+  ];
+
+  return await getFilmData(filmIds);
+}
+
+function enrichWithFilmData(
+  screening: OneDayScreening,
+  filmsData: CSFDMovie[]
+): OneDayScreening {
+  const filmData = filmsData.find(
+    (f) => f.id === screening.filmId
+  );
+
+  const filmName =
+    filmData?.titlesOther.find(
+      (t) => t.country === "US" || t.country === "USA"
+    )?.title || screening.filmName;
+
+  const year = filmData?.year;
+
+  return {
+    ...screening,
+    filmName,
+    year,
+  };
+}
+
 export async function parseScreenings() {
   console.log("fetching data from csfd");
   const response = await fetch(
@@ -91,6 +139,8 @@ export async function parseScreenings() {
   const html = await response.text();
 
   const doc = new jsdom.JSDOM(html);
+  const filmsData = await getFilmDataFromHtml(doc);
+
   const cinemas = doc.window.document.querySelectorAll(
     "section.box.box-cinema"
   );
@@ -125,9 +175,15 @@ export async function parseScreenings() {
     // day -> [screening]
     const dayScreeningsTable =
       cinemaSection.querySelectorAll("table.cinema-table");
-    const dayScreenings = [...dayScreeningsTable].map(
-      (dayScreening) => extractScreeningData(dayScreening)
-    );
+    const dayScreenings = [...dayScreeningsTable]
+      .map((dayScreening) =>
+        extractScreeningData(dayScreening)
+      )
+      .map((screenings) =>
+        screenings.map((screening) =>
+          enrichWithFilmData(screening, filmsData)
+        )
+      );
 
     const dateWithAllScreenings = zip(
       dates,
