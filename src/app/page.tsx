@@ -1,4 +1,3 @@
-import { getFilmIds } from "@/ext/csfd";
 import { HomePageClient } from "./components/HomePageClient";
 import {
   AuthState,
