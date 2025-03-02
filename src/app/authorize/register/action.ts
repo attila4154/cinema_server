@@ -35,7 +35,7 @@ export async function submitRegisterForm(
   const cookieStore = await cookies();
 
   cookieStore.set("accessToken", accessToken, {
-    maxAge: 60 * 60,
+    maxAge: 7 * 24 * 60 * 60, // 7 days
     path: "/",
     // todo: yes in prod
     secure: false,
