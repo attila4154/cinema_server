@@ -2,11 +2,19 @@
 
 import {
   CinemaScreeningData,
+  OneDayScreening,
   ScreeningData,
 } from "@/ext/csfd";
 import moment from "moment";
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { CSFDMovie } from "node-csfd-api/interfaces/movie.interface";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { AuthState } from "../service/authorizationService";
 import { Cinema } from "../util/http";
 import {
@@ -26,6 +34,10 @@ const weekDays = new Map([
   [6, "Sa"],
   [7, "Su"],
 ]);
+
+const FilmDataContext = createContext<null | CSFDMovie[]>(
+  null
+);
 
 function ScreeningTimesRow({
   screeningTimes,
@@ -49,6 +61,40 @@ function ScreeningTimesRow({
 function formatDate(date: string) {
   const weekday = moment(date, "DD.MM.YYYY").isoWeekday();
   return `${date} (${weekDays.get(weekday)})`;
+}
+
+function FilmScreening({
+  screening,
+}: {
+  screening: OneDayScreening;
+}) {
+  const filmsData = useContext(FilmDataContext);
+  const filmData = filmsData?.find(
+    (f) => f.id === screening.filmId
+  );
+  const filmName =
+    filmData?.titlesOther.find(
+      (t) => t.country === "US" || t.country === "USA"
+    )?.title || screening.filmName;
+
+  return (
+    <div>
+      <div className="text-2xl text-red-400">
+        <Link
+          href={`https://www.csfd.cz/film/${screening.filmId}`}
+          target="_blank"
+        >
+          {filmName}
+          {screening.language === "cz" && " (CZ)"}
+          {screening.language === "dubbed" && " (Dub)"}
+          {filmData?.year && ` (${filmData.year})`}
+        </Link>
+      </div>
+      <ScreeningTimesRow
+        screeningTimes={screening.screeningTimes}
+      />
+    </div>
+  );
 }
 
 function DateScreenings({ data }: { data: ScreeningData }) {
@@ -81,22 +127,10 @@ function DateScreenings({ data }: { data: ScreeningData }) {
         <hr />
         <div className="flex flex-col gap-2 mb-3">
           {data.screenings.map((screening, idx) => (
-            <div key={idx}>
-              <div className="text-2xl text-red-400">
-                <Link
-                  href={`https://www.csfd.cz/film/${screening.filmId}`}
-                  target="_blank"
-                >
-                  {screening.filmName}
-                  {screening.language === "cz" && " (CZ)"}
-                  {screening.language === "dubbed" &&
-                    " (Dub)"}
-                </Link>
-              </div>
-              <ScreeningTimesRow
-                screeningTimes={screening.screeningTimes}
-              />
-            </div>
+            <FilmScreening
+              key={idx}
+              screening={screening}
+            />
           ))}
         </div>
       </div>
@@ -166,11 +200,13 @@ export function HomePageClient({
   authState,
   initialUserCinemaIds,
   allCinemas,
+  filmData,
 }: {
   initialScreenings: CinemaScreeningData[];
   authState: AuthState;
   initialUserCinemaIds: number[];
   allCinemas: Cinema[];
+  filmData: CSFDMovie[];
 }) {
   const [userCinemaIds, setUserCinemaIds] = useState(
     initialUserCinemaIds
@@ -236,10 +272,12 @@ export function HomePageClient({
             setFilters={setFilters}
           />
         </StickyWrapper>
-        <AllScreenings
-          screenings={screenings}
-          onSearch={onSearch}
-        />
+        <FilmDataContext.Provider value={filmData}>
+          <AllScreenings
+            screenings={screenings}
+            onSearch={onSearch}
+          />
+        </FilmDataContext.Provider>
         <StickyWrapper>
           <MyCinemas
             allCinemas={allCinemas}
