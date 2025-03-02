@@ -265,7 +265,7 @@ export function HomePageClient({
 
   return (
     <>
-      <div className="grid grid-cols-[1fr_2fr_1fr] pt-12 gap-5">
+      <div className="grid grid-cols-[1fr_2fr_1fr] pt-12 gap-5 mb-5">
         <StickyWrapper>
           <FilterBar
             filters={filters}
