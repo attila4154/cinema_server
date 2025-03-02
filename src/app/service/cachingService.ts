@@ -51,5 +51,5 @@ export const getCachedFilmData = unstable_cache(
     return await getFilmData(filmIds);
   },
   [],
-  { revalidate: 60 * 60 }
+  { revalidate: 1 * 60 }
 );
