@@ -3,6 +3,7 @@ import {
   index,
   integer,
   pgTable,
+  text,
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
@@ -24,6 +25,11 @@ export const usersTable = pgTable(
 export const cinemaTable = pgTable("cinema", {
   id: integer().primaryKey().notNull(),
   name: varchar({ length: 128 }).notNull(),
+});
+
+export const filmTable = pgTable("film", {
+  id: integer().primaryKey().notNull(),
+  data: text().notNull(),
 });
 
 // todo: better to infer from drizzle but id is nullable for some reason

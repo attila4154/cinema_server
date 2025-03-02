@@ -1,5 +1,4 @@
 import jsdom from "jsdom";
-import { unstable_cache } from "next/cache";
 
 // todo: move to util
 function zip<A, B>(a: A[], b: B[]): [A, B][] {
@@ -72,13 +71,17 @@ export type CinemaScreeningData = {
   screenings: ScreeningData[];
 };
 
-export const getAllScreenings = unstable_cache(
-  async () => await parseScreenings(),
-  [],
-  {
-    revalidate: 60 * 60,
-  }
-);
+export function getFilmIds(
+  screenings: CinemaScreeningData[]
+): number[] {
+  const ids = screenings.flatMap((s) =>
+    s.screenings.flatMap((s) =>
+      s.screenings.map((s) => s.filmId)
+    )
+  );
+
+  return [...new Set(ids)];
+}
 
 export async function parseScreenings() {
   console.log("fetching data from csfd");
@@ -86,10 +89,6 @@ export async function parseScreenings() {
     "https://www.csfd.cz/kino/1-praha/?period=all"
   );
   const html = await response.text();
-  // console.log(
-  //   "Response size in KB: " +
-  //     Buffer.byteLength(html, "utf8") / 1024
-  // );
 
   const doc = new jsdom.JSDOM(html);
   const cinemas = doc.window.document.querySelectorAll(
