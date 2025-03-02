@@ -123,16 +123,6 @@ function CinemaScreeningsCard({
 }: {
   data: CinemaScreeningData;
 }) {
-  const nScreenings = data.screenings
-    .flatMap((s) =>
-      s.screenings.flatMap((s) => s.screeningTimes.length)
-    )
-    .reduce((acc, cur) => acc + cur, 0);
-
-  if (nScreenings === 0) {
-    return <></>;
-  }
-
   return (
     <>
       <h2 className="text-3xl font-bold">
@@ -156,18 +146,33 @@ function AllScreenings({
   screenings: CinemaScreeningData[];
   onSearch: (s: string) => void;
 }) {
+  function hasAnyScreenings(
+    cinemaScreeningData: CinemaScreeningData
+  ) {
+    const nScreenings = cinemaScreeningData.screenings
+      .flatMap((s) =>
+        s.screenings.flatMap((s) => s.screeningTimes.length)
+      )
+      .reduce((acc, cur) => acc + cur, 0);
+    return nScreenings !== 0;
+  }
+
   // todo: sort by the time
   return (
     <div>
       <SearchBar onSearch={onSearch} />
       <ul className="flex flex-col gap-5">
-        {screenings.map((cinemaScreeningData) => (
-          <li key={cinemaScreeningData.cinemaId}>
-            <CinemaScreeningsCard
-              data={cinemaScreeningData}
-            />
-          </li>
-        ))}
+        {screenings
+          .filter((s) => hasAnyScreenings(s))
+          .map((cinemaScreeningData) => {
+            return (
+              <li key={cinemaScreeningData.cinemaId}>
+                <CinemaScreeningsCard
+                  data={cinemaScreeningData}
+                />
+              </li>
+            );
+          })}
       </ul>
     </div>
   );
