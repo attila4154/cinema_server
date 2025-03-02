@@ -40,7 +40,7 @@ export async function udpateCache(): Promise<boolean> {
 export const getCachedScreenings = unstable_cache(
   async () => await parseScreenings(),
   [],
-  { revalidate: 1 * 60 }
+  { revalidate: 60 * 60 }
 );
 
 // don't know if it's okay to use cache inside cache

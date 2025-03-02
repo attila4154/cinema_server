@@ -123,6 +123,16 @@ function CinemaScreeningsCard({
 }: {
   data: CinemaScreeningData;
 }) {
+  const nScreenings = data.screenings
+    .flatMap((s) =>
+      s.screenings.flatMap((s) => s.screeningTimes.length)
+    )
+    .reduce((acc, cur) => acc + cur, 0);
+
+  if (nScreenings === 0) {
+    return <></>;
+  }
+
   return (
     <>
       <h2 className="text-3xl font-bold">
