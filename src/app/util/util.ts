@@ -1,18 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export const debounce = (
-  callback: (...args: any[]) => any,
-  wait: number
-) => {
-  let timeoutId: number | undefined;
-  /* eslint-disable @typescript-eslint/no-explicit-any */
-  return (...args: any[]) => {
-    window.clearTimeout(timeoutId);
-    timeoutId = window.setTimeout(() => {
-      callback(...args);
-    }, wait);
-  };
-};
-
 export function throttle(
   callback: (...args: any[]) => any,
   delay: number
@@ -23,5 +9,19 @@ export function throttle(
       callback(...args);
       timer = setTimeout(() => (timer = null), delay);
     }
+  };
+}
+
+export function debounce(
+  callback: (...args: any[]) => any,
+  delay: number
+) {
+  let timeoutId: NodeJS.Timeout | undefined;
+  return function (...args: any[]) {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
+      console.log("in debounce");
+      callback(...args);
+    }, delay);
   };
 }
