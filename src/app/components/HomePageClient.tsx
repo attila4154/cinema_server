@@ -7,7 +7,12 @@ import {
 } from "@/ext/csfd";
 import moment from "moment";
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { AuthState } from "../service/authorizationService";
 import { Cinema } from "../util/http";
 import {
@@ -17,6 +22,10 @@ import {
 } from "./FilterBar";
 import MyCinemas from "./MyCinemas";
 import { SearchBar } from "./SearchBar";
+
+export const FilmDataContext = createContext<FilterData>(
+  {} as FilterData
+);
 
 const weekDays = new Map([
   [1, "Mo"],
@@ -52,6 +61,28 @@ function formatDate(date: string) {
   return `${date} (${weekDays.get(weekday)})`;
 }
 
+function FilmData({
+  screening,
+}: {
+  screening: OneDayScreening;
+}) {
+  if (
+    !screening.year ||
+    !screening.length ||
+    !screening.countries
+  )
+    return null;
+
+  const country = screening.countries.join(", ");
+  const data = [
+    screening.year,
+    country,
+    `${screening.length} min`,
+  ].join(", ");
+
+  return <div>{data}</div>;
+}
+
 function FilmScreening({
   screening,
 }: {
@@ -59,16 +90,17 @@ function FilmScreening({
 }) {
   return (
     <div>
-      <div className="text-2xl text-red-400">
+      <div>
         <Link
           href={`https://www.csfd.cz/film/${screening.filmId}`}
+          className="text-2xl text-red-400"
           target="_blank"
         >
           {screening.filmName}
           {screening.language === "cz" && " (CZ)"}
           {screening.language === "dubbed" && " (Dub)"}
-          {screening?.year && ` (${screening.year})`}
         </Link>
+        <FilmData screening={screening} />
       </div>
       <ScreeningTimesRow
         screeningTimes={screening.screeningTimes}
@@ -190,6 +222,28 @@ function StickyWrapper({
   );
 }
 
+export type FilterData = {
+  minYear: number;
+  maxYear: number;
+};
+
+function getFilterData(
+  screenings: CinemaScreeningData[]
+): FilterData {
+  const years = screenings
+    .flatMap((s) =>
+      s.screenings.flatMap((s) =>
+        s.screenings.flatMap((s) => s.year)
+      )
+    )
+    .filter((y) => y !== undefined);
+
+  return {
+    minYear: Math.min(...years),
+    maxYear: Math.max(...years),
+  };
+}
+
 export function HomePageClient({
   initialScreenings,
   authState,
@@ -201,6 +255,9 @@ export function HomePageClient({
   initialUserCinemaIds: number[];
   allCinemas: Cinema[];
 }) {
+  const { maxYear, minYear } = getFilterData(
+    initialScreenings
+  );
   const [userCinemaIds, setUserCinemaIds] = useState(
     initialUserCinemaIds
   );
@@ -208,8 +265,9 @@ export function HomePageClient({
     groupBy: "cinema",
     datesSelect: "today",
     cinemas: initialUserCinemaIds,
+    years: [minYear, maxYear],
   });
-  // todo: make sure filters are applied on the first render (not in ue) and only once!
+
   const [screenings, setScreenings] = useState(() =>
     applyFilters(
       structuredClone(initialScreenings),
@@ -260,10 +318,14 @@ export function HomePageClient({
     <>
       <div className="grid grid-cols-[1fr_2fr_1fr] pt-12 gap-5 mb-5">
         <StickyWrapper>
-          <FilterBar
-            filters={filters}
-            setFilters={setFilters}
-          />
+          <FilmDataContext.Provider
+            value={{ minYear, maxYear }}
+          >
+            <FilterBar
+              filters={filters}
+              setFilters={setFilters}
+            />
+          </FilmDataContext.Provider>
         </StickyWrapper>
         <AllScreenings
           screenings={screenings}
