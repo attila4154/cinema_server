@@ -30,7 +30,7 @@ export default function RootLayout({
       >
         <div className="grid grid-rows-[60px_1fr]">
           <Header />
-          <div className="flex items-center justify-center min-w-96">
+          <div className="flex items-center justify-center md:min-w-96">
             {children}
           </div>
         </div>
