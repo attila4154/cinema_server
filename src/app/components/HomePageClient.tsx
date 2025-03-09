@@ -43,7 +43,7 @@ function ScreeningTimesRow({
   screeningTimes: string[];
 }) {
   return (
-    <ul className="flex gap-2">
+    <ul className="flex gap-2 flex-wrap">
       {screeningTimes.map((time) => (
         <li
           className="p-1 bg-slate-300 rounded-md"
@@ -93,7 +93,7 @@ function FilmScreening({
       <div>
         <Link
           href={`https://www.csfd.cz/film/${screening.filmId}`}
-          className="text-2xl text-red-400"
+          className="text-2xl text-red-400 text-wrap"
           target="_blank"
         >
           {screening.filmName}
@@ -191,9 +191,9 @@ function AllScreenings({
 
   // todo: sort by the time
   return (
-    <div>
+    <div className="md:m-0 ml-2 mr-2">
       <SearchBar onSearch={onSearch} />
-      <ul className="flex flex-col gap-5">
+      <ul className="flex flex-col gap-5 max-w-[100vw]">
         {screenings
           .filter((s) => hasAnyScreenings(s))
           .map((cinemaScreeningData) => {
@@ -216,7 +216,7 @@ function StickyWrapper({
   children: React.ReactNode;
 }) {
   return (
-    <div className="sticky top-12 overflow-auto h-[100vh]">
+    <div className="block md:sticky md:top-12 md:overflow-auto md:h-[100vh]">
       {children}
     </div>
   );
@@ -316,7 +316,7 @@ export function HomePageClient({
 
   return (
     <>
-      <div className="grid grid-cols-[1fr_2fr_1fr] pt-12 gap-5 mb-5">
+      <div className="grid auto-rows-auto md:grid-cols-[1fr_2fr_1fr] pt-12 gap-5 mb-5">
         <StickyWrapper>
           <FilmDataContext.Provider
             value={{ minYear, maxYear }}
@@ -332,12 +332,14 @@ export function HomePageClient({
           onSearch={onSearch}
         />
         <StickyWrapper>
+          {/* <MyCinemasMobileModal> */}
           <MyCinemas
             allCinemas={allCinemas}
             userCinemaIds={userCinemaIds}
             setUserCinemaIds={setUserCinemaIds}
             authState={authState}
           />
+          {/* </MyCinemasMobileModal> */}
         </StickyWrapper>
       </div>
     </>
