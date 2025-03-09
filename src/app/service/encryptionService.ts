@@ -6,7 +6,7 @@ export function createJWT(userInfo: {
   email: string;
 }) {
   const token = jwt.sign(userInfo, "secret", {
-    expiresIn: "1h",
+    expiresIn: "7d",
   });
 
   return token;
