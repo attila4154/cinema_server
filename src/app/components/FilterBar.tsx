@@ -324,42 +324,42 @@ export default function YearRangeSelector({
     setDateFilterRange(newRange);
   };
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    index: number
-  ) => {
-    let newValue = parseInt(e.target.value, 10);
-    if (isNaN(newValue)) return;
+  // const handleInputChange = (
+  //   e: React.ChangeEvent<HTMLInputElement>,
+  //   index: number
+  // ) => {
+  //   let newValue = parseInt(e.target.value, 10);
+  //   if (isNaN(newValue)) return;
 
-    // Ensure value stays within bounds
-    newValue = Math.max(
-      minYear,
-      Math.min(newValue, maxYear)
-    );
+  //   // Ensure value stays within bounds
+  //   newValue = Math.max(
+  //     minYear,
+  //     Math.min(newValue, maxYear)
+  //   );
 
-    const newRange = [...range] as [number, number];
-    newRange[index] = newValue;
+  //   const newRange = [...range] as [number, number];
+  //   newRange[index] = newValue;
 
-    // Ensure valid range order
-    if (newRange[0] > newRange[1]) {
-      newRange[index === 0 ? 1 : 0] = newValue;
-    }
-    setDateFilterRange(newRange);
-  };
+  //   // Ensure valid range order
+  //   if (newRange[0] > newRange[1]) {
+  //     newRange[index === 0 ? 1 : 0] = newValue;
+  //   }
+  //   setDateFilterRange(newRange);
+  // };
 
   return (
     <div className="flex flex-col items-center">
       <h2 className="text-2xl self-start">Years:</h2>
 
       {/* Number Inputs */}
-      <div className="flex space-x-4 justify-between w-full items-center">
+      {/* <div className="flex space-x-4 justify-between w-full items-center">
         <input
           type="number"
           value={range[0]}
           min={minYear}
           max={maxYear}
           onChange={(e) => handleInputChange(e, 0)}
-          className="w-20 p-2 border rounded text-center"
+          className="w-20 md:p-2 p-1 border rounded text-center"
         />
         <span className="font-bold">to</span>
         <input
@@ -368,12 +368,12 @@ export default function YearRangeSelector({
           min={minYear}
           max={maxYear}
           onChange={(e) => handleInputChange(e, 1)}
-          className="w-20 p-2 border rounded text-center"
+          className="w-20 md:p-2 p-1 border rounded text-center"
         />
-      </div>
+      </div> */}
 
       {/* Custom Dual Slider */}
-      <div className="relative w-full max-w-md h-6">
+      <div className="relative md:w-full w-[90%] max-w-md h-6 md:m-0 mt-2/">
         {/* Track */}
         <div className="absolute top-1/2 left-0 w-full h-2 bg-gray-300 rounded transform -translate-y-1/2"></div>
 

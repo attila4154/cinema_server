@@ -99,7 +99,7 @@ export default function MyCinemas({
       </div>
 
       {authState.loggedIn && (
-        <div className="flex justify-end absolute t-3 -right-0 mr-4">
+        <div className="justify-end absolute t-3 -right-0 mr-4 md:flex hidden">
           <button
             className="bg-slate-200 rounded-md p-2 disabled:bg-slate-400"
             onClick={saveChanges}

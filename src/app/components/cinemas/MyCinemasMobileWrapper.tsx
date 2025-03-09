@@ -1,6 +1,5 @@
 "use client";
 
-// import { useMediaQuery } from "usehooks-ts";
 import { MyCinemasMobileModal } from "./MyCinemasMobileModal";
 
 export function MyCinemasMobileWrapper({
@@ -18,12 +17,4 @@ export function MyCinemasMobileWrapper({
       </div>
     </>
   );
-
-  // const isMobile = useMediaQuery("(max-width: 768px)");
-  // if (!isMobile) {
-  //   return children;
-  // }
-  // return (
-  //   <MyCinemasMobileModal>{children}</MyCinemasMobileModal>
-  // );
 }
