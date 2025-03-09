@@ -65,6 +65,8 @@ export type OneDayScreening = {
   filmName: string;
   language: Language;
   year?: number;
+  length?: string | undefined;
+  countries?: string[] | undefined;
   screeningTimes: string[];
 };
 
@@ -123,11 +125,15 @@ function enrichWithFilmData(
     )?.title || screening.filmName;
 
   const year = filmData?.year;
+  const length = filmData?.duration?.toString();
+  const countries = filmData?.origins.slice(0, 2);
 
   return {
     ...screening,
     filmName,
     year,
+    length,
+    countries,
   };
 }
 
