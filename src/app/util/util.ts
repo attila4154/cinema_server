@@ -20,7 +20,6 @@ export function debounce(
   return function (...args: any[]) {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(() => {
-      console.log("in debounce");
       callback(...args);
     }, delay);
   };

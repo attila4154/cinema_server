@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 export function MyCinemasMobileModal({
   children,
@@ -18,7 +18,10 @@ export function MyCinemasMobileModal({
     }
   }, [isOpen]);
 
-  function handleOpenModal() {
+  function handleOpenModal(
+    e: React.MouseEvent<HTMLSelectElement>
+  ) {
+    e.preventDefault();
     setIsOpen(true);
   }
 
@@ -28,12 +31,12 @@ export function MyCinemasMobileModal({
 
   if (!isOpen) {
     return (
-      <button
+      <select
         onClick={handleOpenModal}
-        className="border rounded-sm w-full"
+        className="border rounded-md w-full flex justify-between p-2"
       >
-        My Cinemas
-      </button>
+        <option>Cinemas</option>
+      </select>
     );
   }
 

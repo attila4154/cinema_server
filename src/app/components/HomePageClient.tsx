@@ -192,9 +192,9 @@ function AllScreenings({
 
   // todo: sort by the time
   return (
-    <div className="md:m-0 md:order-2 order-3">
+    <div className="md:m-0  pt-2d:order-2 order-3">
       <SearchBar onSearch={onSearch} />
-      <ul className="flex flex-col gap-5 max-w-[100vw]">
+      <ul className="flex flex-col gap-5 max-w-[100vw] md:min-w-[auto] min-w-[100vw]">
         {screenings
           .filter((s) => hasAnyScreenings(s))
           .map((cinemaScreeningData) => {

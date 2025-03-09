@@ -10,9 +10,9 @@ export function SearchBar({
   }, 150);
 
   return (
-    <div className="flex items-center bg-gray-100 rounded-lg p-2 pt-3 pb-3 mb-4 text-xl border-gray-100 border-[2px] hover:border-gray-300">
+    <div className="flex items-center bg-gray-100 rounded-lg p-2 md:pt-3 md:pb-3 pt-2 pb-2 mb-4 text-xl border-gray-100 border-[2px] hover:border-gray-300">
       <svg
-        className="w-5 h-5 text-gray-500 mx-2"
+        className="w-5 h-5 text-gray-500 md:mx-2 mx-1"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
@@ -32,7 +32,6 @@ export function SearchBar({
         type="text"
         placeholder="Search..."
         className="bg-transparent focus:outline-none w-full text-gray-700"
-        // value={search}
       />
     </div>
   );
