@@ -1,5 +1,3 @@
-import Image from "next/image";
-import Link from "next/link";
 import { getAuthState } from "../service/authorizationService";
 import { LogoutButton } from "./LogoutButton";
 import { LinkButton } from "./styled/LinkButton";
@@ -39,17 +37,6 @@ export async function Header() {
               </li>
             </>
           )}
-
-          <li>
-            <Link href={"/"}>
-              <Image
-                src="/icon.svg"
-                alt="logo"
-                height={50}
-                width={50}
-              />
-            </Link>
-          </li>
         </ul>
       </nav>
     </header>

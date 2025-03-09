@@ -444,7 +444,7 @@ export function FilterBar({ filters, setFilters }: Props) {
   }
 
   return (
-    <div className="ml-5 mr-5 flex flex-col gap-3">
+    <div className="md:ml-5 md:mr-5 ml-0 mr-0 flex flex-col gap-3">
       <DateFilter
         date={filters.datesSelect}
         selectDate={handleSelectDate}

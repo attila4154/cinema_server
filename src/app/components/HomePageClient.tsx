@@ -22,6 +22,7 @@ import {
 } from "./FilterBar";
 import MyCinemas from "./MyCinemas";
 import { SearchBar } from "./SearchBar";
+import { MyCinemasMobileWrapper } from "./cinemas/MyCinemasMobileWrapper";
 
 export const FilmDataContext = createContext<FilterData>(
   {} as FilterData
@@ -191,7 +192,7 @@ function AllScreenings({
 
   // todo: sort by the time
   return (
-    <div className="md:m-0 ml-2 mr-2">
+    <div className="md:m-0 md:order-2 order-3">
       <SearchBar onSearch={onSearch} />
       <ul className="flex flex-col gap-5 max-w-[100vw]">
         {screenings
@@ -212,11 +213,15 @@ function AllScreenings({
 
 function StickyWrapper({
   children,
+  className,
 }: {
   children: React.ReactNode;
+  className?: string;
 }) {
   return (
-    <div className="block md:sticky md:top-12 md:overflow-auto md:h-[100vh]">
+    <div
+      className={`block md:sticky md:top-12 md:overflow-auto md:h-[100vh] ${className}`}
+    >
       {children}
     </div>
   );
@@ -316,8 +321,8 @@ export function HomePageClient({
 
   return (
     <>
-      <div className="grid auto-rows-auto md:grid-cols-[1fr_2fr_1fr] pt-12 gap-5 mb-5">
-        <StickyWrapper>
+      <div className="grid auto-rows-auto md:grid-cols-[1fr_2fr_1fr] md:pt-12 pt-2 gap-5 mb-5 md:pr-0 md:pl-0 pr-2 pl-2">
+        <StickyWrapper className="md:order:1 order:1">
           <FilmDataContext.Provider
             value={{ minYear, maxYear }}
           >
@@ -331,15 +336,15 @@ export function HomePageClient({
           screenings={screenings}
           onSearch={onSearch}
         />
-        <StickyWrapper>
-          {/* <MyCinemasMobileModal> */}
-          <MyCinemas
-            allCinemas={allCinemas}
-            userCinemaIds={userCinemaIds}
-            setUserCinemaIds={setUserCinemaIds}
-            authState={authState}
-          />
-          {/* </MyCinemasMobileModal> */}
+        <StickyWrapper className="md:order-3 order-2">
+          <MyCinemasMobileWrapper>
+            <MyCinemas
+              allCinemas={allCinemas}
+              userCinemaIds={userCinemaIds}
+              setUserCinemaIds={setUserCinemaIds}
+              authState={authState}
+            />
+          </MyCinemasMobileWrapper>
         </StickyWrapper>
       </div>
     </>
