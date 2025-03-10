@@ -25,6 +25,7 @@ export const usersTable = pgTable(
 export const cinemaTable = pgTable("cinema", {
   id: integer().primaryKey().notNull(),
   name: varchar({ length: 128 }).notNull(),
+  url: varchar({ length: 256 }),
 });
 
 export const filmTable = pgTable("film", {

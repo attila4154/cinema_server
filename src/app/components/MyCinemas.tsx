@@ -78,13 +78,14 @@ export default function MyCinemas({
           <div
             key={cinema.cinemaId}
             className="flex gap-2 items-center"
+            onClick={() => addCinema(cinema)}
           >
             <input
               type="checkbox"
               id={`cinema-${cinema.cinemaId}`}
               checked={false}
               className="cursor-pointer peer hidden"
-              onChange={() => addCinema(cinema)}
+              onChange={(e) => e.preventDefault()}
             />
             <span className="w-5 h-5 border-2 rounded-sm border-gray-400 peer-hover:border-blue-500"></span>
 

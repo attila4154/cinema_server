@@ -119,6 +119,7 @@ function enrichWithFilmData(
     (f) => f.id === screening.filmId
   );
 
+  // todo: don't enrich but use data from db instead
   const filmName =
     filmData?.titlesOther.find(
       (t) => t.country === "US" || t.country === "USA"
