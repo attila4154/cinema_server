@@ -1,3 +1,4 @@
+// todo: break this file into several smaller ones
 import {
   CinemaScreeningData,
   Language,
@@ -293,6 +294,7 @@ function LanguageFilter({
   );
 }
 
+// todo: refactor with debounce (similar to search component)
 export default function YearRangeSelector({
   range,
   setDateFilterRange,

@@ -1,3 +1,5 @@
+import Image from "next/image";
+import { useEffect, useMemo, useState } from "react";
 import { debounce } from "../util/util";
 
 export function SearchBar({
@@ -5,9 +7,28 @@ export function SearchBar({
 }: {
   onSearch: (s: string) => void;
 }) {
-  const debounceSearch = debounce((query: string) => {
-    onSearch(query);
-  }, 150);
+  const [query, setQuery] = useState("");
+  const debounceSearch = useMemo(
+    () =>
+      debounce((query: string) => {
+        onSearch(query);
+      }, 200),
+    [onSearch]
+  );
+
+  // todo: shoulnd't run on the first render
+  useEffect(() => {
+    debounceSearch(query);
+  }, [query, debounceSearch]);
+
+  const handleSearch = (query: string) => {
+    setQuery(query);
+  };
+
+  const handleDeleteQuery = () => {
+    if (query === "") return;
+    setQuery("");
+  };
 
   return (
     <div className="flex items-center bg-gray-100 rounded-lg p-2 md:pt-3 md:pb-3 pt-2 pb-2 mb-4 text-xl border-gray-100 border-[2px] hover:border-gray-300">
@@ -26,13 +47,20 @@ export function SearchBar({
         />
       </svg>
       <input
-        onInput={(e) =>
-          debounceSearch(e.currentTarget.value)
-        }
+        onInput={(e) => handleSearch(e.currentTarget.value)}
+        value={query}
         type="text"
         placeholder="Search..."
         className="bg-transparent focus:outline-none w-full text-gray-700"
       />
+      <button onClick={handleDeleteQuery} className="m-1">
+        <Image
+          src="/cross-23.png"
+          height={20}
+          width={20}
+          alt=""
+        />
+      </button>
     </div>
   );
 }
