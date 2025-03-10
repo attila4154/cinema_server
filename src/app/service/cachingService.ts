@@ -1,6 +1,7 @@
 import { getFilmIds, parseScreenings } from "@/ext/csfd";
 import { unstable_cache } from "next/cache";
 import { csfd } from "node-csfd-api";
+import { getAllCinemas } from "./db/cinemaService";
 import { createFilms, getFilmData } from "./db/filmService";
 
 export async function udpateCache(): Promise<boolean> {
@@ -40,7 +41,13 @@ export async function udpateCache(): Promise<boolean> {
 export const getCachedScreenings = unstable_cache(
   async () => await parseScreenings(),
   [],
-  { revalidate: 60 * 60 }
+  { revalidate: 12 * 60 * 60 }
+);
+
+export const getCachedCinemas = unstable_cache(
+  async () => await getAllCinemas(),
+  [],
+  { revalidate: 24 * 60 * 60 }
 );
 
 // don't know if it's okay to use cache inside cache
