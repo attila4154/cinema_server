@@ -1,6 +1,7 @@
 export type Cinema = {
   cinemaId: number;
   cinemaName: string;
+  url: string|null;
 };
 
 export async function fetchCinemasFrontend() {

@@ -29,28 +29,25 @@ export function MyCinemasMobileModal({
     setIsOpen(false);
   }
 
-  if (!isOpen) {
-    return (
+  return (
+    <>
       <select
         onClick={handleOpenModal}
         className="border rounded-md w-full flex justify-between p-2"
       >
         <option>Cinemas</option>
       </select>
-    );
-  }
-
-  return (
-    <dialog ref={modalRef} className="p-2 rounded-lg">
-      <>
-        <button
-          onClick={handleCloseModal}
-          className="absolute right-2 z-10"
-        >
-          close
-        </button>
-        {children}
-      </>
-    </dialog>
+      <dialog ref={modalRef} className="p-2 rounded-lg">
+        <>
+          <button
+            onClick={handleCloseModal}
+            className="absolute right-2 z-10"
+          >
+            close
+          </button>
+          {children}
+        </>
+      </dialog>
+    </>
   );
 }

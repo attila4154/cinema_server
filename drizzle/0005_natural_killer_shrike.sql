@@ -1,0 +1,1 @@
+ALTER TABLE "cinema" ADD COLUMN "url" varchar(256);

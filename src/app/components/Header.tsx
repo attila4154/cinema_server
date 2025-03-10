@@ -5,9 +5,9 @@ import { LinkButton } from "./styled/LinkButton";
 export async function Header() {
   const authState = await getAuthState();
   return (
-    <header className="flex flex-row bg-slate-500 justify-end items-center">
+    <header className="flex flex-row bg-black justify-end items-center">
       <nav>
-        <ul className="flex flex-row items-center gap-4 mr-4">
+        <ul className="flex flex-row items-center gap-4 md:mr-4 md:mt-2 md:mb-2 mr-2 mt-1 mb-1">
           {authState.loggedIn && (
             <>
               <li>

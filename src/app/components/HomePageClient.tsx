@@ -94,7 +94,7 @@ function FilmScreening({
       <div>
         <Link
           href={`https://www.csfd.cz/film/${screening.filmId}`}
-          className="text-2xl text-red-400 text-wrap"
+          className="text-2xl text-rose-400 text-wrap"
           target="_blank"
         >
           {screening.filmName}
@@ -153,13 +153,24 @@ function DateScreenings({ data }: { data: ScreeningData }) {
 
 function CinemaScreeningsCard({
   data,
+  cinema,
 }: {
   data: CinemaScreeningData;
+  cinema: Cinema | undefined;
 }) {
   return (
     <>
       <h2 className="text-3xl font-bold">
-        {data.cinemaName}
+        {(cinema?.url && (
+          <Link
+            target="_blank"
+            href={cinema.url}
+            className="hover:text-rose-400 transition-all duration-300"
+          >
+            {data.cinemaName}
+          </Link>
+        )) ??
+          data.cinemaName}
       </h2>
       <hr />
       {data.screenings.map((screening) => (
@@ -175,9 +186,11 @@ function CinemaScreeningsCard({
 function AllScreenings({
   screenings,
   onSearch,
+  cinemas,
 }: {
   screenings: CinemaScreeningData[];
   onSearch: (s: string) => void;
+  cinemas: Cinema[];
 }) {
   function hasAnyScreenings(
     cinemaScreeningData: CinemaScreeningData
@@ -194,7 +207,7 @@ function AllScreenings({
   return (
     <div className="md:m-0  pt-2d:order-2 order-3">
       <SearchBar onSearch={onSearch} />
-      <ul className="flex flex-col gap-5 max-w-[100vw] md:min-w-[auto] min-w-[100vw]">
+      <ul className="flex flex-col gap-5 max-w-full md:min-w-[auto] min-w-full">
         {screenings
           .filter((s) => hasAnyScreenings(s))
           .map((cinemaScreeningData) => {
@@ -202,6 +215,11 @@ function AllScreenings({
               <li key={cinemaScreeningData.cinemaId}>
                 <CinemaScreeningsCard
                   data={cinemaScreeningData}
+                  cinema={cinemas.find(
+                    (c) =>
+                      c.cinemaId ===
+                      cinemaScreeningData.cinemaId
+                  )}
                 />
               </li>
             );
@@ -321,7 +339,7 @@ export function HomePageClient({
 
   return (
     <>
-      <div className="grid auto-rows-auto md:grid-cols-[1fr_2fr_1fr] md:pt-12 pt-2 gap-5 mb-5 md:pr-0 md:pl-0 pr-2 pl-2">
+      <div className="grid auto-rows-auto md:grid-cols-[1fr_2fr_1fr] md:pt-12 pt-2 gap-5 mb-5 md:pr-0 md:pl-0 pr-2 pl-2 min-w-[100vw] max-w-[100vw]">
         <StickyWrapper className="md:order:1 order:1">
           <FilmDataContext.Provider
             value={{ minYear, maxYear }}
@@ -335,6 +353,7 @@ export function HomePageClient({
         <AllScreenings
           screenings={screenings}
           onSearch={onSearch}
+          cinemas={allCinemas}
         />
         <StickyWrapper className="md:order-3 order-2">
           <MyCinemasMobileWrapper>

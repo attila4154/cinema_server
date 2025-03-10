@@ -3,7 +3,13 @@ import { cinemaTable } from "@/db/schema";
 import { getUser } from "./customerService";
 
 export async function getAllCinemas() {
-  const cinemas = await db.select().from(cinemaTable);
+  const cinemas = (await db.select().from(cinemaTable)).map(
+    (c) => ({
+      cinemaId: c.id,
+      cinemaName: c.name,
+      url: c.url,
+    })
+  );
   return cinemas;
 }
 
