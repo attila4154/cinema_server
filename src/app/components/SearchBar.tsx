@@ -53,7 +53,10 @@ export function SearchBar({
         placeholder="Search..."
         className="bg-transparent focus:outline-none w-full text-gray-700"
       />
-      <button onClick={handleDeleteQuery} className="m-1">
+      <button
+        onClick={handleDeleteQuery}
+        className="p-1 hover:border-1 hover:bg-slate-200 rounded-md transition-all"
+      >
         <Image
           src="/cross-23.png"
           height={20}
