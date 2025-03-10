@@ -9,7 +9,9 @@ import {
   Dispatch,
   SetStateAction,
   useContext,
+  useRef,
 } from "react";
+import { debounce } from "../util/util";
 import { FilmDataContext } from "./HomePageClient";
 
 type DatesSelect =
@@ -300,123 +302,80 @@ export default function YearRangeSelector({
     range: [a: number, b: number]
   ) => void;
 }) {
-  // todo: handle nulls
+  // that is bad practice, but I want to update filter range only when the valid range was given
+  const inputOneRef = useRef<HTMLInputElement>(null);
+  const inputTwoRef = useRef<HTMLInputElement>(null);
   const { minYear, maxYear } = useContext(FilmDataContext);
 
-  // todo: handle ...
-  // useEffect(() => {
-  //   range[0] = Math.max(range[0], minYear);
-  //   range[1] = Math.max(range[1], maxYear);
-  // }, [minYear, maxYear, range]);
+  const handleInputChange = debounce(
+    (index: number, value: number) => {
+      if (isNaN(value)) return;
+      if (index === 0) {
+        const toYear = parseInt(inputTwoRef.current!.value);
+        setDateFilterRange([value, toYear]);
+      } else {
+        const fromYear = parseInt(
+          inputOneRef.current!.value
+        );
+        setDateFilterRange([fromYear, value]);
+      }
+    },
+    200
+  );
 
-  const handleSliderChange = (
-    index: number,
-    value: number
-  ) => {
-    const newRange = [...range] as [number, number];
-    newRange[index] = value;
-
-    // Ensure the "from" year is never greater than the "to" year
-    if (newRange[0] > newRange[1]) {
-      newRange[index === 0 ? 1 : 0] = value;
-    }
-
-    setDateFilterRange(newRange);
+  const handleSliderChange = (value: number) => {
+    inputTwoRef.current!.value = value.toString();
+    setDateFilterRange([minYear, value]);
   };
-
-  // const handleInputChange = (
-  //   e: React.ChangeEvent<HTMLInputElement>,
-  //   index: number
-  // ) => {
-  //   let newValue = parseInt(e.target.value, 10);
-  //   if (isNaN(newValue)) return;
-
-  //   // Ensure value stays within bounds
-  //   newValue = Math.max(
-  //     minYear,
-  //     Math.min(newValue, maxYear)
-  //   );
-
-  //   const newRange = [...range] as [number, number];
-  //   newRange[index] = newValue;
-
-  //   // Ensure valid range order
-  //   if (newRange[0] > newRange[1]) {
-  //     newRange[index === 0 ? 1 : 0] = newValue;
-  //   }
-  //   setDateFilterRange(newRange);
-  // };
 
   return (
     <div className="flex flex-col items-center">
       <h2 className="text-2xl self-start">Years:</h2>
 
       {/* Number Inputs */}
-      {/* <div className="flex space-x-4 justify-between w-full items-center">
+      <div className="flex space-x-4 justify-between w-full items-center mb-3">
         <input
+          ref={inputOneRef}
           type="number"
-          value={range[0]}
+          defaultValue={minYear}
           min={minYear}
           max={maxYear}
-          onChange={(e) => handleInputChange(e, 0)}
+          onChange={(e) =>
+            handleInputChange(
+              0,
+              parseInt(e.currentTarget.value)
+            )
+          }
           className="w-20 md:p-2 p-1 border rounded text-center"
         />
         <span className="font-bold">to</span>
         <input
+          ref={inputTwoRef}
           type="number"
-          value={range[1]}
+          defaultValue={maxYear}
           min={minYear}
           max={maxYear}
-          onChange={(e) => handleInputChange(e, 1)}
+          onChange={(e) =>
+            handleInputChange(
+              1,
+              parseInt(e.currentTarget.value)
+            )
+          }
           className="w-20 md:p-2 p-1 border rounded text-center"
         />
-      </div> */}
+      </div>
 
       {/* Custom Dual Slider */}
       <div className="relative md:w-full w-[90%] max-w-md h-6 md:m-0 mt-2/">
-        {/* Track */}
-        <div className="absolute top-1/2 left-0 w-full h-2 bg-gray-300 rounded transform -translate-y-1/2"></div>
-
-        {/* Selected Range (Filled Part of Track) */}
-        <div
-          className="absolute top-1/2 h-2 bg-blue-500 rounded transform -translate-y-1/2"
-          style={{
-            left: `${
-              ((range[0] - minYear) / (maxYear - minYear)) *
-              100
-            }%`,
-            right: `${
-              100 -
-              ((range[1] - minYear) / (maxYear - minYear)) *
-                100
-            }%`,
-          }}
-        ></div>
-
-        {/* Left Handle */}
-        <input
-          type="range"
-          min={minYear}
-          max={maxYear}
-          value={range[0]}
-          onChange={(e) =>
-            handleSliderChange(0, parseInt(e.target.value))
-          }
-          className="absolute w-full h-2 opacity-0 cursor-pointer"
-          style={{ zIndex: 2 }}
-          title={range[0].toString()}
-        />
-        {/* Right Handle */}
         <input
           type="range"
           min={minYear}
           max={maxYear}
           value={range[1]}
           onChange={(e) =>
-            handleSliderChange(1, parseInt(e.target.value))
+            handleSliderChange(parseInt(e.target.value))
           }
-          className="absolute w-full h-2 opacity-0 cursor-pointer"
-          style={{ zIndex: 2 }}
+          className="absolute w-full h-2 cursor-pointer"
           title={range[1].toString()}
         />
       </div>
