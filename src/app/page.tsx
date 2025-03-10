@@ -3,8 +3,11 @@ import {
   AuthState,
   getAuthState,
 } from "./service/authorizationService";
-import { getCachedScreenings } from "./service/cachingService";
-import { getAllCinemas, getCinemasForUser } from "./service/db/cinemaService";
+import {
+  getCachedCinemas,
+  getCachedScreenings,
+} from "./service/cachingService";
+import { getCinemasForUser } from "./service/db/cinemaService";
 
 async function getCinemas(authState: AuthState) {
   if (!authState.loggedIn) return [];
@@ -14,7 +17,7 @@ async function getCinemas(authState: AuthState) {
 export default async function Home() {
   const authState = await getAuthState();
   const userCinemaIds = await getCinemas(authState);
-  const allCinemas = await getAllCinemas();
+  const allCinemas = await getCachedCinemas();
   const allScreenings = await getCachedScreenings();
 
   return (
