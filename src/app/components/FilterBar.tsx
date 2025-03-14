@@ -368,7 +368,7 @@ export default function YearRangeSelector({
       </div>
 
       {/* Custom Dual Slider */}
-      <div className="relative md:w-full w-[90%] max-w-md h-6 md:m-0 mt-2/">
+      <div className="relative min-w-full h-6 md:m-0 mt-2/">
         <input
           type="range"
           min={minYear}
