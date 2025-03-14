@@ -207,7 +207,7 @@ function AllScreenings({
   return (
     <div className="md:m-0  pt-2d:order-2 order-3">
       <SearchBar onSearch={onSearch} />
-      <ul className="flex flex-col gap-5 max-w-full md:min-w-[auto] min-w-full">
+      <ul className="flex flex-col gap-5 max-w-full md:min-w-[auto] min-w-full md:min-h-auto min-h-[100vh]">
         {screenings
           .filter((s) => hasAnyScreenings(s))
           .map((cinemaScreeningData) => {
