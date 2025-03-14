@@ -32,6 +32,7 @@ export function MyCinemasMobileModal({
   return (
     <>
       <select
+        onChange={(e) => e.preventDefault()}
         onClick={handleOpenModal}
         className="border rounded-md w-full flex justify-between p-2"
       >
