@@ -4,6 +4,7 @@ import {
   Language,
   OneDayScreening,
 } from "@/ext/csfd";
+import addDays from "date-fns/addDays";
 import Fuse from "fuse.js";
 import moment from "moment";
 import {
@@ -12,20 +13,16 @@ import {
   useContext,
   useRef,
 } from "react";
+import { DateRangePicker } from "rsuite";
+import { RangeType } from "rsuite/esm/DateRangePicker";
 import { debounce } from "../util/util";
 import { FilmDataContext } from "./HomePageClient";
-
-type DatesSelect =
-  | "today"
-  | "tomorrow"
-  | "next-week"
-  | "all";
+const { beforeToday } = DateRangePicker;
 
 export type Filters = {
   language?: Language | null;
   years: [number, number];
-  // dates?: Date | [Date, Date]; // not used yet
-  datesSelect: DatesSelect;
+  dateRange: [Date, Date];
   country?: string;
   groupBy?: "cinema" | "film";
   cinemas?: number[];
@@ -36,36 +33,26 @@ export type Filters = {
 
 function applyDateSelect(
   screenings: CinemaScreeningData[],
-  dataSelect: DatesSelect
+  dateRange: [Date, Date]
 ): CinemaScreeningData[] {
+  const [from, to] = dateRange;
+  const fromMoment = moment(from);
+  const toMoment = moment(to);
+
   return screenings.map((data) => ({
     ...data,
     screenings: data.screenings.filter((screenings) => {
-      if (dataSelect === "today") {
-        // todo: tests?
-        return (
-          moment().format("DD.MM.YYYY") === screenings.date
-        );
-      }
-      if (dataSelect === "tomorrow") {
-        return (
-          moment().add(1, "days").format("DD.MM.YYYY") ===
-          screenings.date
-        );
-      }
-      if (dataSelect === "next-week") {
-        const momentScreeningDate = moment(
-          screenings.date,
-          "DD.MM.YYYY"
-        );
-        return moment()
-          .add(7, "days")
-          .isAfter(momentScreeningDate);
-      }
-      if (dataSelect === "all") {
-        return true;
-      }
-      return false;
+      const momentScreeningDate = moment(
+        screenings.date,
+        "DD.MM.YYYY"
+      );
+      return (
+        momentScreeningDate.isSameOrAfter(
+          fromMoment,
+          "day"
+        ) &&
+        momentScreeningDate.isSameOrBefore(toMoment, "day")
+      );
     }),
   }));
 }
@@ -160,7 +147,7 @@ export function applyFilters(
 ): CinemaScreeningData[] {
   let filtered = applyDateSelect(
     screenings,
-    filters.datesSelect
+    filters.dateRange
   );
   filtered = applyLanguageFilter(
     filtered,
@@ -178,61 +165,56 @@ type Props = {
   setFilters: Dispatch<SetStateAction<Filters>>;
 };
 
+const predefinedRanges = [
+  {
+    label: "Today",
+    value: [new Date(), new Date()],
+  },
+  {
+    label: "Tomorrow",
+    value: [addDays(new Date(), 1), addDays(new Date(), 1)],
+  },
+  {
+    label: "This week",
+    value: [new Date(), addDays(new Date(), 7)],
+  },
+  // {
+  //   label: "This month",
+  //   value: [startOfMonth(new Date()), new Date()],
+  // },
+  {
+    label: "All time",
+    value: [new Date(), addDays(new Date(), 365)],
+  },
+  {
+    label: "Clear",
+    value: null,
+  },
+] as RangeType[];
+
 function DateFilter({
-  date,
-  selectDate,
+  selectDateRange,
 }: {
-  date: DatesSelect;
-  selectDate: (date: DatesSelect) => void;
+  dateRange: [Date, Date];
+  selectDateRange: (range: [Date, Date]) => void;
 }) {
-  const datesOptions = [
-    {
-      value: "today",
-      text: "Today",
-    },
-    {
-      value: "tomorrow",
-      text: "Tomorrow",
-    },
-    {
-      value: "next-week",
-      text: "Next week",
-    },
-    {
-      value: "all",
-      text: "All",
-    },
-  ];
-
-  function handleSelectDate(
-    e: React.ChangeEvent<HTMLSelectElement>
-  ) {
-    const value = e.currentTarget.value;
-    selectDate(value as DatesSelect);
-  }
-
   return (
-    <div className="flex flex-col">
-      <label
-        htmlFor="dates-select"
-        className="text-2xl block"
-      >
-        Dates:
-      </label>
-      <select
-        name="dates"
-        id="dates-select"
-        value={date}
-        className="border rounded-md p-[6px]"
-        onChange={handleSelectDate}
-      >
-        {datesOptions.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.text}
-          </option>
-        ))}
-      </select>
-    </div>
+    <DateRangePicker
+      showOneCalendar
+      ranges={predefinedRanges}
+      shouldDisableDate={beforeToday()}
+      placeholder={"Today"}
+      format="dd.MM.yyyy"
+      character=" - "
+      isoWeek={true}
+      onOk={([from, to]) => selectDateRange([from, to])}
+      onShortcutClick={(shortcut) =>
+        selectDateRange(shortcut.value as [Date, Date])
+      }
+      onClean={() =>
+        selectDateRange([new Date(), new Date()])
+      }
+    />
   );
 }
 
@@ -390,8 +372,8 @@ export default function YearRangeSelector({
 }
 
 export function FilterBar({ filters, setFilters }: Props) {
-  function handleSelectDate(date: DatesSelect) {
-    setFilters((prev) => ({ ...prev, datesSelect: date }));
+  function handleSelectDate(dateRange: [Date, Date]) {
+    setFilters((prev) => ({ ...prev, dateRange }));
   }
 
   function handleSelectLanguage(language: Language) {
@@ -407,8 +389,8 @@ export function FilterBar({ filters, setFilters }: Props) {
   return (
     <div className="md:ml-5 md:mr-5 ml-0 mr-0 flex flex-col gap-3">
       <DateFilter
-        date={filters.datesSelect}
-        selectDate={handleSelectDate}
+        dateRange={filters.dateRange}
+        selectDateRange={handleSelectDate}
       />
       <LanguageFilter
         language={filters.language}

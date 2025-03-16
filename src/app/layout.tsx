@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import "rsuite/dist/rsuite-no-reset.min.css";
 import { Header } from "./components/Header";
 import "./globals.css";
 

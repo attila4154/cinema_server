@@ -286,7 +286,7 @@ export function HomePageClient({
   );
   const [filters, setFilters] = useState<Filters>({
     groupBy: "cinema",
-    datesSelect: "today",
+    dateRange: [new Date(), new Date()],
     cinemas: initialUserCinemaIds,
     years: [minYear, maxYear],
   });
