@@ -18,7 +18,7 @@ import { Cinema } from "../util/http";
 import { MyCinemasMobileWrapper } from "./cinemas/MyCinemasMobileWrapper";
 import {
   applyFilters,
-  FilterBar,
+  FilterBarWrapper,
   Filters,
 } from "./filter/FilterBar";
 import MyCinemas from "./MyCinemas";
@@ -238,7 +238,7 @@ function StickyWrapper({
 }) {
   return (
     <div
-      className={`block md:sticky md:top-12 md:overflow-auto md:h-[100vh] ${className}`}
+      className={`contents md:block md:sticky md:top-12 md:overflow-auto md:h-[100vh] ${className}`}
     >
       {children}
     </div>
@@ -344,7 +344,7 @@ export function HomePageClient({
           <FilmDataContext.Provider
             value={{ minYear, maxYear }}
           >
-            <FilterBar
+            <FilterBarWrapper
               filters={filters}
               setFilters={setFilters}
             />

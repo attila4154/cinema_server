@@ -4,7 +4,7 @@ import {
   OneDayScreening,
 } from "@/ext/csfd";
 import Fuse from "fuse.js";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { applyDateSelect, DateFilter } from "./DateFilter";
 import {
   applyLanguageFilter,
@@ -94,6 +94,45 @@ type Props = {
   filters: Filters;
   setFilters: Dispatch<SetStateAction<Filters>>;
 };
+
+function FilterBarMobileWrapper({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const [isFiltersOpen, setFiltersOpen] = useState(false);
+
+  return (
+    <>
+      {!isFiltersOpen && (
+        <button onClick={() => setFiltersOpen(true)}>
+          Show filters
+        </button>
+      )}
+      {isFiltersOpen && children}
+    </>
+  );
+}
+
+export function FilterBarWrapper({
+  filters,
+  setFilters,
+}: Props) {
+  const filterBar = (
+    <FilterBar filters={filters} setFilters={setFilters} />
+  );
+
+  return (
+    <>
+      <div className="hidden md:contents">{filterBar}</div>
+      <div className="md:hidden contents">
+        <FilterBarMobileWrapper>
+          {filterBar}
+        </FilterBarMobileWrapper>
+      </div>
+    </>
+  );
+}
 
 export function FilterBar({ filters, setFilters }: Props) {
   function handleSelectDate(dateRange: [Date, Date]) {
