@@ -68,6 +68,7 @@ export function DateFilter({
       placeholder={"Today"}
       format="dd.MM.yyyy"
       character=" - "
+      size="lg"
       isoWeek={true}
       onOk={([from, to]) => selectDateRange([from, to])}
       onShortcutClick={(shortcut) =>
