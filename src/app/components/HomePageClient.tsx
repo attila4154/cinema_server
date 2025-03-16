@@ -15,14 +15,14 @@ import {
 } from "react";
 import { AuthState } from "../service/authorizationService";
 import { Cinema } from "../util/http";
+import { MyCinemasMobileWrapper } from "./cinemas/MyCinemasMobileWrapper";
 import {
   applyFilters,
   FilterBar,
   Filters,
-} from "./FilterBar";
+} from "./filter/FilterBar";
 import MyCinemas from "./MyCinemas";
 import { SearchBar } from "./SearchBar";
-import { MyCinemasMobileWrapper } from "./cinemas/MyCinemasMobileWrapper";
 
 export const FilmDataContext = createContext<FilterData>(
   {} as FilterData
