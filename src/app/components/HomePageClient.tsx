@@ -281,9 +281,6 @@ export function HomePageClient({
   const { maxYear, minYear } = getFilterData(
     initialScreenings
   );
-  const [userCinemaIds, setUserCinemaIds] = useState(
-    initialUserCinemaIds
-  );
   const [filters, setFilters] = useState<Filters>({
     groupBy: "cinema",
     dateRange: [new Date(), new Date()],
@@ -299,22 +296,6 @@ export function HomePageClient({
   );
 
   useEffect(() => {
-    console.log("ue1");
-    if (userCinemaIds.length) {
-      setFilters((prev) => ({
-        ...prev,
-        cinemas: [...userCinemaIds],
-      }));
-    } else {
-      setFilters((prev) => ({
-        ...prev,
-        cinemas: [],
-      }));
-    }
-  }, [userCinemaIds, initialScreenings, setScreenings]);
-
-  // todo: shouldn't run on the first render
-  useEffect(() => {
     console.log("ue2");
     setScreenings(() =>
       applyFilters(
@@ -322,20 +303,22 @@ export function HomePageClient({
         filters
       )
     );
-  }, [
-    filters,
-    setScreenings,
-    initialScreenings,
-    userCinemaIds,
-  ]);
+  }, [filters, setScreenings, initialScreenings]);
 
   const onSearch = useCallback(
     (search: string) => {
-      console.log("on search parent");
       setFilters((prev) => ({ ...prev, search }));
     },
     [setFilters]
   );
+
+  function onCinemaListUpdate(
+    updater: (prev: number[]) => number[]
+  ) {
+    setFilters((prev) => {
+      return { ...prev, cinemas: updater(prev.cinemas) };
+    });
+  }
 
   return (
     <>
@@ -359,8 +342,8 @@ export function HomePageClient({
           <MyCinemasMobileWrapper>
             <MyCinemas
               allCinemas={allCinemas}
-              userCinemaIds={userCinemaIds}
-              setUserCinemaIds={setUserCinemaIds}
+              userCinemaIds={filters.cinemas}
+              setUserCinemaIds={onCinemaListUpdate}
               authState={authState}
             />
           </MyCinemasMobileWrapper>
