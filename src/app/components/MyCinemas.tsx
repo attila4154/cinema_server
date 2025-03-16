@@ -1,11 +1,13 @@
 "use client";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import { AuthState } from "../service/authorizationService";
 import { Cinema } from "../util/http";
 
 type Props = {
   userCinemaIds: number[];
-  setUserCinemaIds: Dispatch<SetStateAction<number[]>>;
+  setUserCinemaIds: (
+    updater: (prev: number[]) => number[]
+  ) => void;
   allCinemas: Cinema[];
   authState: AuthState;
 };

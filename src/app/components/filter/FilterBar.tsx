@@ -21,7 +21,7 @@ export type Filters = {
   dateRange: [Date, Date];
   country?: string;
   groupBy?: "cinema" | "film";
-  cinemas?: number[];
+  cinemas: number[];
   search?: string;
 };
 
