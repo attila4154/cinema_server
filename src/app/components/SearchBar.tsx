@@ -2,6 +2,26 @@ import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import { debounce } from "../util/util";
 
+function DeleteQueryButton({
+  handleClick,
+}: {
+  handleClick: () => void;
+}) {
+  return (
+    <button
+      onClick={handleClick}
+      className="p-1 hover:border-1 hover:bg-slate-200 rounded-md transition-all"
+    >
+      <Image
+        src="/cross-23.png"
+        height={20}
+        width={20}
+        alt=""
+      />
+    </button>
+  );
+}
+
 export function SearchBar({
   onSearch,
 }: {
@@ -53,17 +73,11 @@ export function SearchBar({
         placeholder="Search..."
         className="bg-transparent focus:outline-none w-full text-gray-700"
       />
-      <button
-        onClick={handleDeleteQuery}
-        className="p-1 hover:border-1 hover:bg-slate-200 rounded-md transition-all"
-      >
-        <Image
-          src="/cross-23.png"
-          height={20}
-          width={20}
-          alt=""
+      {query.length !== 0 && (
+        <DeleteQueryButton
+          handleClick={handleDeleteQuery}
         />
-      </button>
+      )}
     </div>
   );
 }
