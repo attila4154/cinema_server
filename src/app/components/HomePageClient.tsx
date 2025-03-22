@@ -4,6 +4,7 @@ import {
   CinemaScreeningData,
   OneDayScreening,
   ScreeningData,
+  ScreeningTime,
 } from "@/ext/csfd";
 import moment from "moment";
 import Link from "next/link";
@@ -41,16 +42,21 @@ const weekDays = new Map([
 function ScreeningTimesRow({
   screeningTimes,
 }: {
-  screeningTimes: string[];
+  screeningTimes: ScreeningTime[];
 }) {
   return (
     <ul className="flex gap-2 flex-wrap">
-      {screeningTimes.map((time) => (
+      {screeningTimes.map(({ time, language }) => (
         <li
           className="p-1 bg-slate-300 rounded-md"
           key={time}
         >
-          {time}
+          <span className="flex">
+            {time}
+            {language === "dubbed" && (
+              <span className="text-sm">dub</span>
+            )}
+          </span>
         </li>
       ))}
     </ul>
@@ -98,8 +104,6 @@ function FilmScreening({
           target="_blank"
         >
           {screening.filmName}
-          {screening.language === "cz" && " (CZ)"}
-          {screening.language === "dubbed" && " (Dub)"}
         </Link>
         <FilmData screening={screening} />
       </div>
