@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "rsuite/dist/rsuite-no-reset.min.css";
-import { Header } from "./components/Header";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -34,14 +33,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased text-lg h-[100vh]`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased text-lg h-[100vh] bg-black/90 text-white`}
       >
-        <div className="grid grid-rows-[auto_1fr]">
-          <Header />
-          <div className="flex items-center justify-center md:min-w-96">
-            {children}
-          </div>
-        </div>
+        {children}
       </body>
     </html>
   );

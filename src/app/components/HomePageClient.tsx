@@ -15,14 +15,12 @@ import {
 } from "react";
 import { AuthState } from "../service/authorizationService";
 import { Cinema } from "../util/http";
-import { MyCinemasMobileWrapper } from "./cinemas/MyCinemasMobileWrapper";
 import {
   applyFilters,
   FilterBar,
   Filters,
 } from "./filter/FilterBar";
-import MyCinemas from "./MyCinemas";
-import { SearchBar } from "./SearchBar";
+import { Header } from "./header/Header";
 
 export const FilmDataContext = createContext<FilterData>(
   {} as FilterData
@@ -205,8 +203,7 @@ function AllScreenings({
 
   // todo: sort by the time
   return (
-    <div className="md:m-0  pt-2d:order-2 order-3">
-      <SearchBar onSearch={onSearch} />
+    <div className="md:m-0">
       <ul className="flex flex-col gap-5 max-w-full md:min-w-[auto] min-w-full md:min-h-auto min-h-[100vh]">
         {screenings
           .filter((s) => hasAnyScreenings(s))
@@ -321,8 +318,9 @@ export function HomePageClient({
   }
 
   return (
-    <>
-      <div className="grid auto-rows-auto md:grid-cols-[1fr_2fr_1fr] md:pt-12 pt-2 gap-5 mb-5 md:pr-0 md:pl-0 pr-2 pl-2 min-w-[100vw] max-w-[100vw]">
+    <main className="grid grid-rows-[auto_auto] grid-cols-[1fr_3fr_1fr]">
+      <Header onSearch={onSearch} />
+      <div className="bg-black/50 grid grid-cols-subgrid col-span-3 h-[100vh]">
         <StickyWrapper className="md:order:1 order:1">
           <FilmDataContext.Provider
             value={{ minYear, maxYear }}
@@ -338,6 +336,10 @@ export function HomePageClient({
           onSearch={onSearch}
           cinemas={allCinemas}
         />
+        <div>third</div>
+      </div>
+
+      {/* <div className="grid auto-rows-auto md:grid-cols-[1fr_2fr_1fr] md:pt-12 pt-2 gap-5 mb-5 md:pr-0 md:pl-0 pr-2 pl-2 min-w-[100vw] max-w-[100vw]">
         <StickyWrapper className="md:order-3 order-2">
           <MyCinemasMobileWrapper>
             <MyCinemas
@@ -348,7 +350,7 @@ export function HomePageClient({
             />
           </MyCinemasMobileWrapper>
         </StickyWrapper>
-      </div>
-    </>
+      </div> */}
+    </main>
   );
 }
