@@ -7,10 +7,6 @@ import Fuse from "fuse.js";
 import { Dispatch, SetStateAction } from "react";
 import { applyDateSelect, DateFilter } from "./DateFilter";
 import {
-  applyLanguageFilter,
-  LanguageFilter,
-} from "./LanguageFilter";
-import {
   applyYearRangeFilter,
   YearRangeSelector,
 } from "./YearFilter";
@@ -79,10 +75,6 @@ export function applyFilters(
     screenings,
     filters.dateRange
   );
-  filtered = applyLanguageFilter(
-    filtered,
-    filters.language
-  );
 
   filtered = applyCinemasFilter(filtered, filters.cinemas);
   filtered = applySearchFilter(filtered, filters.search);
@@ -100,9 +92,9 @@ export function FilterBar({ filters, setFilters }: Props) {
     setFilters((prev) => ({ ...prev, dateRange }));
   }
 
-  function handleSelectLanguage(language: Language) {
-    setFilters((prev) => ({ ...prev, language: language }));
-  }
+  // function handleSelectLanguage(language: Language) {
+  //   setFilters((prev) => ({ ...prev, language: language }));
+  // }
 
   function handleSelectYearRange(
     years: [a: number, b: number]
@@ -116,10 +108,10 @@ export function FilterBar({ filters, setFilters }: Props) {
         dateRange={filters.dateRange}
         selectDateRange={handleSelectDate}
       />
-      <LanguageFilter
+      {/* <LanguageFilter
         language={filters.language}
         selectLanguage={handleSelectLanguage}
-      />
+      /> */}
       <YearRangeSelector
         range={filters.years}
         setDateFilterRange={handleSelectYearRange}

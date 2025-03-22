@@ -1,13 +1,7 @@
 import { getFilmData } from "@/app/service/db/filmService";
+import { zip } from "@/app/util/util";
 import jsdom from "jsdom";
 import { CSFDMovie } from "node-csfd-api/interfaces/movie.interface";
-
-// todo: move to util
-function zip<A, B>(a: A[], b: B[]): [A, B][] {
-  if (a.length !== b.length)
-    throw new Error("length mismatch!");
-  return a.map((k, i) => [k, b[i]]);
-}
 
 export type Language = "cz" | "dubbed" | "subs";
 
@@ -47,12 +41,24 @@ function extractScreeningData(dayScreening: Element) {
   const screenings = [
     ...dayScreening.querySelectorAll("tr"),
   ].map((screening) => {
-    const screeningTimes = [
+    const screenings = [
       ...screening.querySelectorAll("td.td-time"),
-    ].map((timeCol) => timeCol.textContent!.trim());
+    ]
+      .map((timeCol) => timeCol.textContent!.trim())
+      // there might be multple screenings at the same column
+      .flatMap((time) => time.match(/\b\d{1,2}:\d{2}\b/g))
+      .filter((time) => time !== null);
+
+    const { filmId, filmName, language } =
+      extractFilmData(screening);
+    const screeningTimes = screenings.map((time) => ({
+      time,
+      language,
+    }));
 
     return {
-      ...extractFilmData(screening),
+      filmId,
+      filmName,
       screeningTimes,
     };
   });
@@ -60,14 +66,18 @@ function extractScreeningData(dayScreening: Element) {
   return screenings;
 }
 
+export type ScreeningTime = {
+  time: string;
+  language: Language;
+};
+
 export type OneDayScreening = {
   filmId: number;
   filmName: string;
-  language: Language;
   year?: number;
   length?: string | undefined;
   countries?: string[] | undefined;
-  screeningTimes: string[];
+  screeningTimes: ScreeningTime[];
 };
 
 export type ScreeningData = {

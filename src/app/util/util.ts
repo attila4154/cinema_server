@@ -24,3 +24,9 @@ export function debounce(
     }, delay);
   };
 }
+
+export function zip<A, B>(a: A[], b: B[]): [A, B][] {
+  if (a.length !== b.length)
+    throw new Error("length mismatch!");
+  return a.map((k, i) => [k, b[i]]);
+}
