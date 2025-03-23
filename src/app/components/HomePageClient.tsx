@@ -15,12 +15,9 @@ import {
 } from "react";
 import { AuthState } from "../service/authorizationService";
 import { Cinema } from "../util/http";
-import {
-  applyFilters,
-  FilterBar,
-  Filters,
-} from "./filter/FilterBar";
+import { applyFilters, Filters } from "./filter/FilterBar";
 import { Header } from "./header/Header";
+import { AllScreenings } from "./screeningList/AllScreenings";
 
 export const FilmDataContext = createContext<FilterData>(
   {} as FilterData
@@ -181,7 +178,7 @@ function CinemaScreeningsCard({
   );
 }
 
-function AllScreenings({
+function AllScreenings1({
   screenings,
   onSearch,
   cinemas,
@@ -318,28 +315,29 @@ export function HomePageClient({
   }
 
   return (
-    <main className="grid grid-rows-[auto_auto] grid-cols-[1fr_3fr_1fr]">
-      <Header onSearch={onSearch} />
-      <div className="bg-black/50 grid grid-cols-subgrid col-span-3 h-[100vh]">
-        <StickyWrapper className="md:order:1 order:1">
-          <FilmDataContext.Provider
+    <>
+      <main className="flex flex-col md:grid md:grid-rows-[auto_auto] md:grid-cols-[1fr_3fr_1fr]">
+        <Header onSearch={onSearch} />
+        <div className="bg-black/50 grid grid-cols-subgrid col-span-3 pt-5">
+          <StickyWrapper className="hidden md:block">
+            {/* <FilmDataContext.Provider
             value={{ minYear, maxYear }}
           >
             <FilterBar
               filters={filters}
               setFilters={setFilters}
             />
-          </FilmDataContext.Provider>
-        </StickyWrapper>
-        <AllScreenings
-          screenings={screenings}
-          onSearch={onSearch}
-          cinemas={allCinemas}
-        />
-        <div>third</div>
-      </div>
+          </FilmDataContext.Provider> */}
+          </StickyWrapper>
+          <AllScreenings
+            screenings={screenings}
+            // onSearch={onSearch}
+            // cinemas={allCinemas}
+          />
+          <div className="hidden md:block"></div>
+        </div>
 
-      {/* <div className="grid auto-rows-auto md:grid-cols-[1fr_2fr_1fr] md:pt-12 pt-2 gap-5 mb-5 md:pr-0 md:pl-0 pr-2 pl-2 min-w-[100vw] max-w-[100vw]">
+        {/* <div className="grid auto-rows-auto md:grid-cols-[1fr_2fr_1fr] md:pt-12 pt-2 gap-5 mb-5 md:pr-0 md:pl-0 pr-2 pl-2 min-w-[100vw] max-w-[100vw]">
         <StickyWrapper className="md:order-3 order-2">
           <MyCinemasMobileWrapper>
             <MyCinemas
@@ -351,6 +349,8 @@ export function HomePageClient({
           </MyCinemasMobileWrapper>
         </StickyWrapper>
       </div> */}
-    </main>
+      </main>
+      <div id="screening-modal" className="contents"></div>
+    </>
   );
 }
