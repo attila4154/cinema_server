@@ -9,7 +9,7 @@ type Props = {
 export function CinemaScreeningCard({ screenings }: Props) {
   return (
     <>
-      <H2 className="text-3xl sticky top-0 pt-2 pb-2 z-10 bg-black">
+      <H2 className="sticky top-0 pt-2 pb-2 z-10 bg-black">
         {screenings.cinemaName}
       </H2>
       <ul>

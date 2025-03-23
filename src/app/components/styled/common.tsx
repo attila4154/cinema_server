@@ -2,11 +2,13 @@ export function H2({
   className,
   children,
 }: {
-  className: string;
+  className?: string;
   children: React.ReactNode;
 }) {
   return (
-    <h2 className={`${className} md:text-4xl`}>
+    <h2
+      className={`${className ?? ""} md:text-4xl text-3xl`}
+    >
       {children}
     </h2>
   );
@@ -16,11 +18,13 @@ export function H3({
   className,
   children,
 }: {
-  className: string;
+  className?: string;
   children: React.ReactNode;
 }) {
   return (
-    <h3 className={`${className} md:text-3xl`}>
+    <h3
+      className={`${className ?? ""} md:text-3xl text-2xl`}
+    >
       {children}
     </h3>
   );
@@ -30,11 +34,13 @@ export function H4({
   className,
   children,
 }: {
-  className: string;
+  className?: string;
   children: React.ReactNode;
 }) {
   return (
-    <h4 className={`${className} md:text-2xl`}>
+    <h4
+      className={`${className ?? ""} md:text-2xl text-xl`}
+    >
       {children}
     </h4>
   );

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ScreeningModal } from "./ScreeningModal";
 
-const pillClassName =
+export const pillClassName =
   "border rounded-2xl p-3 pt-1 pb-1 hover:border-[#00ac1c] active:border-[#00ac1c] transition-all duration-300 cursor-pointer select-none text-nowrap text-base md:text-xl";
 
 export type ScreeningProps = {
@@ -32,14 +32,12 @@ export function ScreeningTimePill(props: ScreeningProps) {
       <div className={pillClassName} onClick={handleOpen}>
         {props.time}
       </div>
-      {isModalOpen &&
-        createPortal(
-          <ScreeningModal
-            handleClose={handleClose}
-            {...props}
-          />,
-          document.getElementById("screening-modal")!
-        )}
+      {isModalOpen && (
+        <ScreeningModal
+          handleClose={handleClose}
+          {...props}
+        />
+      )}
     </>
   );
 }

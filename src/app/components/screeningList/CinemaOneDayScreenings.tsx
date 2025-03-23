@@ -23,7 +23,7 @@ export function CinemaOneDayScreenings({
 }) {
   return (
     <>
-      <H3 className="self-end text-2xl">
+      <H3 className="self-end">
         {getDateString(data.date)}
       </H3>
       <hr />

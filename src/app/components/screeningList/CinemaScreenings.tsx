@@ -18,7 +18,7 @@ export function FilmInfo(filmData: FilmProps) {
     !filmData.length ||
     !filmData.countries
   )
-    return <H4 className="text-xl">{filmData.filmName}</H4>;
+    return <H4>{filmData.filmName}</H4>;
 
   const country = filmData.countries.join(", ");
   const data = [
@@ -28,7 +28,7 @@ export function FilmInfo(filmData: FilmProps) {
   ].join(", ");
   return (
     <div>
-      <H4 className="text-xl">{filmData.filmName}</H4>
+      <H4>{filmData.filmName}</H4>
       <div className="text-sm md:text-lg">{data}</div>
     </div>
   );
