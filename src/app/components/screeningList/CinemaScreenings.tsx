@@ -12,7 +12,7 @@ type FilmProps = {
   countries: string[] | undefined;
 };
 
-export function Film(filmData: FilmProps) {
+export function FilmInfo(filmData: FilmProps) {
   if (
     !filmData.year ||
     !filmData.length ||
@@ -29,7 +29,7 @@ export function Film(filmData: FilmProps) {
   return (
     <div>
       <H4 className="text-xl">{filmData.filmName}</H4>
-      <div>{data}</div>
+      <div className="text-sm md:text-lg">{data}</div>
     </div>
   );
 }
@@ -47,8 +47,8 @@ export function CinemaScreenings({
 }: Props) {
   return (
     <>
-      <div className="flex flex-row justify-between items-center pl-2 pr-2 pt-3 pb-3">
-        <Film
+      <div className="flex flex-row justify-between items-center pl-2 pr-2 pt-3 pb-3 gap-5">
+        <FilmInfo
           filmName={data.filmName}
           year={data.year}
           length={data.length}

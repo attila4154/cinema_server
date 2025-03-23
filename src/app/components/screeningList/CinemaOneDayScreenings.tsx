@@ -39,7 +39,7 @@ export function CinemaOneDayScreenings({
               cinemaName={cinemaName}
             />
             {idx !== data.screenings.length - 1 && (
-              <hr className="w-[90%] opacity-50 self-center" />
+              <hr className="w-[95%] opacity-50 self-center" />
             )}
           </li>
         ))}
