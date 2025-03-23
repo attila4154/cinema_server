@@ -1,6 +1,8 @@
 import { OneDayScreening } from "@/ext/csfd";
+import { useState } from "react";
 import { H4 } from "../styled/common";
 import {
+  MorePills,
   MoreScreeningTimePills,
   ScreeningTimePill,
 } from "./screeningTimePills";
@@ -45,9 +47,11 @@ export function CinemaScreenings({
   cinemaName,
   date,
 }: Props) {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
-    <>
-      <div className="flex flex-row justify-between items-center pl-2 pr-2 pt-3 pb-3 gap-5">
+    <div className="pl-2 pr-2 pt-3 pb-3 flex gap-2 flex-col">
+      <div className="flex flex-row justify-between items-center gap-5">
         <FilmInfo
           filmName={data.filmName}
           year={data.year}
@@ -63,10 +67,22 @@ export function CinemaScreenings({
           />
         ) : (
           <MoreScreeningTimePills
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
             screenings={data.screeningTimes}
           />
         )}
       </div>
-    </>
+
+      {/* todo: animation */}
+      {isOpen && data.screeningTimes.length !== 1 && (
+        <MorePills
+          screenings={data.screeningTimes}
+          filmName={data.filmName}
+          cinemaName={cinemaName}
+          date={date}
+        />
+      )}
+    </div>
   );
 }

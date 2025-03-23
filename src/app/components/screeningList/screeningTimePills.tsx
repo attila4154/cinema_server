@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { useState } from "react";
 import { ScreeningModal } from "./ScreeningModal";
 
@@ -44,13 +45,64 @@ export function ScreeningTimePill(props: ScreeningProps) {
 
 export function MoreScreeningTimePills({
   screenings,
+  isOpen,
+  setIsOpen,
 }: {
   screenings: string[];
+  isOpen: boolean;
+  setIsOpen: (a: boolean) => void;
 }) {
   const n = screenings.length;
-  return (
-    <div className={pillClassName}>
+
+  function open() {
+    setIsOpen(true);
+  }
+
+  function close() {
+    setIsOpen(false);
+  }
+
+  // todo: adjust height
+  return isOpen ? (
+    <button className={pillClassName} onClick={close}>
+      <Image
+        className="h-6 w-6"
+        height={100}
+        width={100}
+        alt=""
+        src="/icon_hide.svg"
+      />
+    </button>
+  ) : (
+    <button className={pillClassName} onClick={open}>
       {screenings[0]} +{n - 1}
-    </div>
+    </button>
+  );
+}
+
+export function MorePills({
+  screenings,
+  filmName,
+  date,
+  cinemaName,
+}: {
+  screenings: string[];
+  filmName: string;
+  date: string;
+  cinemaName: string;
+}) {
+  return (
+    <ul className="flex flex-row gap-1 flex-wrap">
+      {screenings.map((s) => (
+        <ul key={s}>
+          <ScreeningTimePill
+            time={s}
+            filmName={filmName}
+            cinemaName={cinemaName}
+            date={date}
+          />
+        </ul>
+      ))}
+    </ul>
   );
 }
