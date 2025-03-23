@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "rsuite/dist/rsuite-no-reset.min.css";
 import "./globals.css";
+import { COLOR_PRIMARY } from "./global";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,7 +34,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased text-lg h-[100vh] bg-black/90 text-white/80 `}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased text-lg h-[100vh] ${COLOR_PRIMARY} text-white/80 `}
       >
         {children}
       </body>

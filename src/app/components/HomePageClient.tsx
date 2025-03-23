@@ -318,7 +318,7 @@ export function HomePageClient({
     <>
       <main className="flex flex-col md:grid md:grid-rows-[auto_auto] md:grid-cols-[1fr_3fr_1fr]">
         <Header onSearch={onSearch} />
-        <div className="bg-black/50 grid grid-cols-subgrid col-span-3 pt-5">
+        <div className="bg-black/90 grid grid-cols-subgrid col-span-3 pt-5">
           <StickyWrapper className="hidden md:block">
             {/* <FilmDataContext.Provider
             value={{ minYear, maxYear }}
@@ -332,7 +332,7 @@ export function HomePageClient({
           <AllScreenings
             screenings={screenings}
             // onSearch={onSearch}
-            // cinemas={allCinemas}
+            cinemas={allCinemas}
           />
           <div className="hidden md:block"></div>
         </div>

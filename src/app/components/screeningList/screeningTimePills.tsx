@@ -3,7 +3,7 @@ import { useState } from "react";
 import { ScreeningModal } from "./ScreeningModal";
 
 export const pillClassName =
-  "border rounded-2xl p-3 pt-1 pb-1 hover:border-[#00ac1c] active:border-[#00ac1c] transition-all duration-300 cursor-pointer select-none text-nowrap text-base md:text-xl";
+  "border rounded-2xl p-3 pt-1 pb-1 hover:border-[#40bcf4] active:border-[#40bcf4] hover:shadow-[0_0_5px_1px_#40bcf4] transition-all cursor-pointer select-none text-nowrap text-base md:text-xl";
 
 export type ScreeningProps = {
   time: string;

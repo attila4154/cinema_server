@@ -8,6 +8,10 @@
   --foreground: #171717;
 }
 
+@theme {
+  --color-secondary-element: #40bcf4;
+}
+
 /* @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;

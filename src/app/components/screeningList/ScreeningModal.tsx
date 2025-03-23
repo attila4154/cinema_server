@@ -1,4 +1,7 @@
-import { COLOR_SECONDARY } from "@/app/global";
+import {
+  COLOR_PRIMARY,
+  COLOR_SECONDARY,
+} from "@/app/global";
 import { useEffect, useMemo, useRef } from "react";
 import { H3, H4 } from "../styled/common";
 import {
@@ -60,13 +63,13 @@ export function ScreeningModal({
       },
       slideOn: () => {
         contentRef?.current?.classList.remove(
-          "translate-y-[30vh]"
+          "translate-y-[40vh]"
         );
         contentRef?.current?.classList.add("translate-y-0");
       },
       slideOff: () => {
         contentRef?.current?.classList.add(
-          "translate-y-[30vh]"
+          "translate-y-[40vh]"
         );
         contentRef?.current?.classList.remove(
           "translate-y-0"
@@ -93,7 +96,7 @@ export function ScreeningModal({
     <dialog
       ref={modalRef}
       open={true}
-      className="z-50 w-full top-0 left-0 h-full transition-all backdrop-blur-none flex flex-col backdrop:bg-black/50 bg-black/10 justify-end items-center fixed"
+      className="z-50 w-full top-0 left-0 h-full transition-all backdrop-blur-none duration-300 flex flex-col backdrop:bg-black/50 bg-black/10 justify-end items-center fixed"
       onClose={onClose}
       onClick={(e) => {
         if (e.target === modalRef.current) onClose();
@@ -101,7 +104,7 @@ export function ScreeningModal({
     >
       <div
         ref={contentRef}
-        className="bg-black/90 translate-y-[30vh] text-white transition-all duration-500 rounded-xl p-3 w-full md:w-[50%]"
+        className={`${COLOR_PRIMARY} translate-y-[40vh] text-white transition-all duration-500 rounded-xl p-3 w-full md:w-[50%]`}
         onClick={(e) => e.preventDefault()}
       >
         <ScreeningInfo {...props} />
