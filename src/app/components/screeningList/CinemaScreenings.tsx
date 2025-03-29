@@ -75,12 +75,13 @@ export function CinemaScreenings({
       </div>
 
       {/* todo: animation */}
-      {isOpen && data.screeningTimes.length !== 1 && (
+      {data.screeningTimes.length !== 1 && (
         <MorePills
           screenings={data.screeningTimes}
           filmName={data.filmName}
           cinemaName={cinemaName}
           date={date}
+          isOpen={isOpen}
         />
       )}
     </div>

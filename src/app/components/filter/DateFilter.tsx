@@ -77,6 +77,7 @@ export function DateFilter({
       onClean={() =>
         selectDateRange([new Date(), new Date()])
       }
+      className="rs-theme-dark"
     />
   );
 }

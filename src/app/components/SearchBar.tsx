@@ -71,7 +71,7 @@ export function SearchBar({
         value={query}
         type="text"
         placeholder="Search..."
-        className="bg-transparent focus:outline-none w-full text-gray-700"
+        className="bg-transparent focus:outline-none w-full "
       />
       {query.length !== 0 && (
         <DeleteQueryButton

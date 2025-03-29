@@ -1,8 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "rsuite/dist/rsuite-no-reset.min.css";
-import "./globals.css";
+
 import { COLOR_PRIMARY } from "./global";
+import "./globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

@@ -3,6 +3,21 @@ import moment from "moment";
 import { H3 } from "../styled/common";
 import { CinemaScreenings } from "./CinemaScreenings";
 
+const weekDays = new Map([
+  [1, "Mo"],
+  [2, "Tu"],
+  [3, "We"],
+  [4, "Th"],
+  [5, "Fr"],
+  [6, "Sa"],
+  [7, "Su"],
+]);
+
+function formatDate(date: string) {
+  const weekday = moment(date, "DD.MM.YYYY").isoWeekday();
+  return `${weekDays.get(weekday)} ${date}`;
+}
+
 function getDateString(date: string) {
   const dateMoment = moment(date, "DD.MM.YYYY");
   if (dateMoment.isSame(moment(), "day")) {
@@ -11,7 +26,7 @@ function getDateString(date: string) {
   if (dateMoment.isSame(moment().add(1, "day"), "days")) {
     return "Tomorrow";
   }
-  return date;
+  return formatDate(date);
 }
 
 export function CinemaOneDayScreenings({

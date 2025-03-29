@@ -5,8 +5,10 @@ import { MenuButton } from "./MenuButton";
 
 export function Header({
   onSearch,
+  children,
 }: {
   onSearch: (q: string) => void;
+  children: React.ReactNode;
 }) {
   // const authState = await getAuthState();
   return (
@@ -16,7 +18,7 @@ export function Header({
       </div>
       <SearchBar onSearch={onSearch} />
       <div className="md:hidden flex items-center h-full justify-center">
-        <FilterButton />
+        <FilterButton>{children}</FilterButton>
       </div>
     </header>
   );

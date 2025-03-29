@@ -85,23 +85,29 @@ export function MorePills({
   filmName,
   date,
   cinemaName,
+  isOpen,
 }: {
   screenings: string[];
   filmName: string;
   date: string;
   cinemaName: string;
+  isOpen: boolean;
 }) {
   return (
-    <ul className="flex flex-row gap-1 flex-wrap">
+    <ul
+      className={`flex flex-row gap-1 flex-wrap transition-all overflow-clip ${
+        isOpen ? "h-9 " : "h-0 "
+      }`}
+    >
       {screenings.map((s) => (
-        <ul key={s}>
+        <li key={s}>
           <ScreeningTimePill
             time={s}
             filmName={filmName}
             cinemaName={cinemaName}
             date={date}
           />
-        </ul>
+        </li>
       ))}
     </ul>
   );

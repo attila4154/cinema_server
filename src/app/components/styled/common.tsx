@@ -7,7 +7,7 @@ export function H2({
 }) {
   return (
     <h2
-      className={`${className ?? ""} md:text-4xl text-3xl`}
+      className={`${className ?? ""} md:text-4xl text-2xl`}
     >
       {children}
     </h2>
@@ -23,7 +23,7 @@ export function H3({
 }) {
   return (
     <h3
-      className={`${className ?? ""} md:text-3xl text-2xl`}
+      className={`${className ?? ""} md:text-3xl text-xl`}
     >
       {children}
     </h3>
@@ -39,7 +39,7 @@ export function H4({
 }) {
   return (
     <h4
-      className={`${className ?? ""} md:text-2xl text-xl`}
+      className={`${className ?? ""} md:text-2xl text-lg`}
     >
       {children}
     </h4>

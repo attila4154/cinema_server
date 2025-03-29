@@ -51,14 +51,14 @@ export function ScreeningModal({
         modalRef.current?.classList.remove(
           "backdrop-blur-none"
         );
-        modalRef.current?.classList.add("backdrop-blur-sm");
+        modalRef.current?.classList.add("backdrop-blur-md");
       },
       backdropOff: () => {
         modalRef.current?.classList.add(
           "backdrop-blur-none"
         );
         modalRef.current?.classList.remove(
-          "backdrop-blur-sm"
+          "backdrop-blur-md"
         );
       },
       slideOn: () => {
@@ -83,7 +83,7 @@ export function ScreeningModal({
     setTimeout(() => {
       animations.backdropOn();
       animations.slideOn();
-    }, 30);
+    }, 1);
   }, [animations]);
 
   function onClose() {
@@ -96,7 +96,7 @@ export function ScreeningModal({
     <dialog
       ref={modalRef}
       open={true}
-      className="z-50 w-full top-0 left-0 h-full transition-all backdrop-blur-none duration-300 flex flex-col backdrop:bg-black/50 bg-black/10 justify-end items-center fixed"
+      className="z-50 w-full top-0 left-0 h-full transition-all backdrop-blur-none duration-500 flex flex-col backdrop:bg-black/50 bg-black/10 justify-end items-center fixed ease-in-out"
       onClose={onClose}
       onClick={(e) => {
         if (e.target === modalRef.current) onClose();
