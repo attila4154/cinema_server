@@ -57,17 +57,14 @@ export function LanguageFilter({
 
   return (
     <div className="flex flex-col">
-      <label
-        htmlFor="language-select"
-        className="text-2xl block"
-      >
-        Language:
+      <label htmlFor="language-select">
+        <h2>Language:</h2>
       </label>
       <select
         name="language"
         id="language-select"
         value={language || "all"}
-        className="border rounded-md p-[6px]"
+        className="rounded-md p-[6px] border border-[#3c3f43]"
         onChange={handleSelectLanguage}
       >
         {languageOptions.map((option) => (

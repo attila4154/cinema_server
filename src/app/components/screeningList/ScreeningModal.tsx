@@ -96,7 +96,7 @@ export function ScreeningModal({
     <dialog
       ref={modalRef}
       open={true}
-      className="z-50 w-full top-0 left-0 h-full transition-all backdrop-blur-none duration-500 flex flex-col backdrop:bg-black/50 bg-black/10 justify-end items-center fixed ease-in-out"
+      className="z-50 w-full top-0 left-0 h-full transition-all backdrop-blur-none duration-250 flex flex-col backdrop:bg-black/50 bg-black/10 justify-end items-center fixed ease-in-out"
       onClose={onClose}
       onClick={(e) => {
         if (e.target === modalRef.current) onClose();

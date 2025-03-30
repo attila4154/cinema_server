@@ -10,12 +10,12 @@ function DeleteQueryButton({
   return (
     <button
       onClick={handleClick}
-      className="p-1 hover:border-1 hover:bg-slate-200 rounded-md transition-all"
+      className="hover:border-1 hover:bg-slate-200 rounded-md transition-all"
     >
       <Image
-        src="/cross-23.png"
-        height={20}
-        width={20}
+        src="/cross.svg"
+        height={35}
+        width={35}
         alt=""
       />
     </button>
