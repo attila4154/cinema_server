@@ -2,6 +2,7 @@
 
 import { MyCinemasMobileModal } from "./MyCinemasMobileModal";
 
+// todo: remove
 export function MyCinemasMobileWrapper({
   children,
 }: {

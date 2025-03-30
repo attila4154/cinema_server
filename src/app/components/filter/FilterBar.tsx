@@ -5,6 +5,7 @@ import {
 } from "@/ext/csfd";
 import Fuse from "fuse.js";
 import { Dispatch, SetStateAction } from "react";
+import MyCinemas from "../MyCinemas";
 import { applyDateSelect, DateFilter } from "./DateFilter";
 import {
   applyLanguageFilter,
@@ -110,6 +111,15 @@ export function FilterBar({ filters, setFilters }: Props) {
     setFilters((prev) => ({ ...prev, years }));
   }
 
+  function handleCinemaListUpdate(
+    updater: (ids: number[]) => number[]
+  ) {
+    setFilters((prev) => {
+      const newCinemaIds = updater(prev.cinemas);
+      return { ...prev, cinemas: newCinemaIds };
+    });
+  }
+
   return (
     <div className="md:ml-5 md:mr-5 ml-0 mr-0 flex flex-col gap-3">
       <DateFilter
@@ -123,6 +133,10 @@ export function FilterBar({ filters, setFilters }: Props) {
       <YearRangeSelector
         range={filters.years}
         setDateFilterRange={handleSelectYearRange}
+      />
+      <MyCinemas
+        userCinemaIds={filters.cinemas}
+        setUserCinemaIds={handleCinemaListUpdate}
       />
     </div>
   );

@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  CinemaScreeningData,
-  OneDayScreening,
-} from "@/ext/csfd";
-import moment from "moment";
+import { CinemaScreeningData } from "@/ext/csfd";
 import {
   createContext,
   useCallback,
@@ -25,7 +21,9 @@ export const FilmDataContext = createContext<FilterData>(
   {} as FilterData
 );
 
-
+export const CinemaDataContext = createContext<Cinema[]>(
+  []
+);
 
 // function StickyWrapper({
 //   children,
@@ -122,14 +120,16 @@ export function HomePageClient({
     <>
       <main className="flex flex-col md:grid md:grid-rows-[auto_auto] md:grid-cols-[1fr_3fr_1fr]">
         <Header onSearch={onSearch}>
-          <FilmDataContext.Provider
-            value={{ minYear, maxYear }}
-          >
-            <FilterBar
-              filters={filters}
-              setFilters={setFilters}
-            />
-          </FilmDataContext.Provider>
+          <CinemaDataContext.Provider value={allCinemas}>
+            <FilmDataContext.Provider
+              value={{ minYear, maxYear }}
+            >
+              <FilterBar
+                filters={filters}
+                setFilters={setFilters}
+              />
+            </FilmDataContext.Provider>
+          </CinemaDataContext.Provider>
         </Header>
         <div className="bg-black/90 grid grid-cols-subgrid col-span-3 pt-5">
           <div></div>
