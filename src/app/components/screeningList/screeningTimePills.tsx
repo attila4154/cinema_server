@@ -11,6 +11,7 @@ export type ScreeningProps = {
   url?: string;
   filmName: string;
   cinemaName: string;
+  length?: string;
 };
 
 // todo: to take a look: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dialog#animating_dialogs
@@ -95,7 +96,7 @@ export function MorePills({
 }) {
   return (
     <ul
-    // todo: animation
+      // todo: animation
       className={`flex flex-row gap-1 flex-wrap transition-all overflow-clip ${
         isOpen ? "h-auto " : "h-0 "
       }`}
@@ -103,7 +104,7 @@ export function MorePills({
       {screenings.map((s) => (
         <li key={s}>
           <ScreeningTimePill
-            time={s}
+            time={filmName + s}
             filmName={filmName}
             cinemaName={cinemaName}
             date={date}
