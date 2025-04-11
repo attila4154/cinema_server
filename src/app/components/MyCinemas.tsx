@@ -1,24 +1,20 @@
 "use client";
-import { useState } from "react";
-import { AuthState } from "../service/authorizationService";
+import { useContext } from "react";
 import { Cinema } from "../util/http";
+import { CinemaDataContext } from "./HomePageClient";
 
 type Props = {
   userCinemaIds: number[];
   setUserCinemaIds: (
     updater: (prev: number[]) => number[]
   ) => void;
-  allCinemas: Cinema[];
-  authState: AuthState;
 };
 
 export default function MyCinemas({
   userCinemaIds,
   setUserCinemaIds,
-  allCinemas,
-  authState,
 }: Props) {
-  const [changed, setChanged] = useState(false);
+  const allCinemas = useContext(CinemaDataContext);
 
   const userCinemas = allCinemas.filter((cin) =>
     userCinemaIds.some((id) => id === cin.cinemaId)
@@ -29,24 +25,12 @@ export default function MyCinemas({
 
   function addCinema(cinema: Cinema) {
     setUserCinemaIds((prev) => [cinema.cinemaId, ...prev]);
-    setChanged(true);
   }
 
   function removeCinema(cinema: Cinema) {
     setUserCinemaIds((prev) =>
       prev.filter((cin) => cin !== cinema.cinemaId)
     );
-    setChanged(true);
-  }
-
-  // todo: error messages if failed
-  // todo: move to server function
-  async function saveChanges() {
-    await fetch("/api/my-cinemas", {
-      method: "PUT",
-      body: JSON.stringify(userCinemaIds),
-    });
-    setChanged(false);
   }
 
   return (
@@ -58,13 +42,14 @@ export default function MyCinemas({
             <div
               key={cinema.cinemaId}
               className="flex gap-2 items-center"
+              onClick={() => removeCinema(cinema)}
             >
               <input
                 type="checkbox"
                 id={`cinema-${cinema.cinemaId}`}
                 checked={true}
-                className="w-5 h-5"
-                onChange={() => removeCinema(cinema)}
+                className="w-4 h-4"
+                onChange={(e) => e.preventDefault()}
               />
               <label htmlFor={`cinema-${cinema.cinemaId}`}>
                 {cinema.cinemaName}
@@ -86,10 +71,11 @@ export default function MyCinemas({
               type="checkbox"
               id={`cinema-${cinema.cinemaId}`}
               checked={false}
-              className="cursor-pointer peer hidden"
               onChange={(e) => e.preventDefault()}
+              className="w-4 h-4"
+              // className="cursor-pointer peer hidden"
             />
-            <span className="w-5 h-5 border-2 rounded-sm border-gray-400 peer-hover:border-blue-500"></span>
+            {/* <span className="w-5 h-5 border-2 rounded-sm border-gray-400 peer-hover:border-blue-500"></span> */}
 
             <label
               htmlFor={`cinema-${cinema.cinemaId}`}
@@ -101,7 +87,7 @@ export default function MyCinemas({
         ))}
       </div>
 
-      {authState.loggedIn && (
+      {/* {authState.loggedIn && (
         <div className="justify-end absolute t-3 -right-0 mr-4 md:flex hidden">
           <button
             className="bg-slate-200 rounded-md p-2 disabled:bg-slate-400"
@@ -111,7 +97,7 @@ export default function MyCinemas({
             Save
           </button>
         </div>
-      )}
+      )} */}
     </div>
   );
 }

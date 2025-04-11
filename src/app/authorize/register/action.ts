@@ -17,13 +17,13 @@ export async function submitRegisterForm(
   const password = formData.get("password") as string;
 
   if (!email || !password) {
-    // todo:
-    return { error: "missing values" };
+    return { error: "missing values", email };
   }
 
+  // todo: don't use it
   const exists = await customerExists(email);
   if (exists) {
-    return { error: "Customer already exists" };
+    return { error: "Customer already exists", email };
   }
 
   const userInfo = await createCustomer({

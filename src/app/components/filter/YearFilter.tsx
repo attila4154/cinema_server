@@ -12,10 +12,12 @@ export function applyYearRangeFilter(
     ...s,
     screenings: s.screenings.map((s) => ({
       ...s,
-      screenings: s.screenings.filter(
-        (s) =>
-          s.year && s.year >= years[0] && s.year <= years[1]
-      ),
+      screenings: s.screenings.filter((s) => {
+        if (!s.year) {
+          return true;
+        }
+        return s.year >= years[0] && s.year <= years[1];
+      }),
     })),
   }));
 }
@@ -58,7 +60,7 @@ export function YearRangeSelector({
 
   return (
     <div className="flex flex-col items-center">
-      <h2 className="text-2xl self-start">Years:</h2>
+      <h2 className="self-start">Years:</h2>
 
       {/* Number Inputs */}
       <div className="flex space-x-4 justify-between w-full items-center mb-3">
@@ -74,7 +76,7 @@ export function YearRangeSelector({
               parseInt(e.currentTarget.value)
             )
           }
-          className="w-20 md:p-2 p-1 border rounded text-center"
+          className="w-20 md:p-2 p-1 border rounded text-center border-[#3c3f43] bg-[#1a1d24]"
         />
         <span className="font-bold">to</span>
         <input
@@ -89,7 +91,7 @@ export function YearRangeSelector({
               parseInt(e.currentTarget.value)
             )
           }
-          className="w-20 md:p-2 p-1 border rounded text-center"
+          className="w-20 md:p-2 p-1 border rounded text-center border-[#3c3f43] bg-[#1a1d24] "
         />
       </div>
 

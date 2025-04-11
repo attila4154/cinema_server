@@ -10,12 +10,12 @@ function DeleteQueryButton({
   return (
     <button
       onClick={handleClick}
-      className="p-1 hover:border-1 hover:bg-slate-200 rounded-md transition-all"
+      className="hover:border-1 hover:bg-slate-200 rounded-md transition-all"
     >
       <Image
-        src="/cross-23.png"
-        height={20}
-        width={20}
+        src="/cross.svg"
+        height={35}
+        width={35}
         alt=""
       />
     </button>
@@ -51,7 +51,7 @@ export function SearchBar({
   };
 
   return (
-    <div className="flex items-center bg-gray-100 rounded-lg p-2 md:pt-3 md:pb-3 pt-2 pb-2 mb-4 text-xl border-gray-100 border-[2px] hover:border-gray-300 transition-all">
+    <div className="flex items-center bg-[#2C2C2C] rounded-lg p-2 pt-2 pb-2 text-xl hover:border-gray-300 transition-all">
       <svg
         className="w-5 h-5 text-gray-500 md:mx-2 mx-1"
         xmlns="http://www.w3.org/2000/svg"
@@ -71,7 +71,7 @@ export function SearchBar({
         value={query}
         type="text"
         placeholder="Search..."
-        className="bg-transparent focus:outline-none w-full text-gray-700"
+        className="bg-transparent focus:outline-none w-full "
       />
       {query.length !== 0 && (
         <DeleteQueryButton

@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 
+// todo: remove
 export function MyCinemasMobileModal({
   children,
 }: {

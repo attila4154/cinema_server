@@ -61,22 +61,26 @@ export function DateFilter({
   selectDateRange: (range: [Date, Date]) => void;
 }) {
   return (
-    <DateRangePicker
-      showOneCalendar
-      ranges={predefinedRanges}
-      shouldDisableDate={beforeToday()}
-      placeholder={"Today"}
-      format="dd.MM.yyyy"
-      character=" - "
-      size="lg"
-      isoWeek={true}
-      onOk={([from, to]) => selectDateRange([from, to])}
-      onShortcutClick={(shortcut) =>
-        selectDateRange(shortcut.value as [Date, Date])
-      }
-      onClean={() =>
-        selectDateRange([new Date(), new Date()])
-      }
-    />
+    <div>
+      <h2>Dates:</h2>
+      <DateRangePicker
+        showOneCalendar
+        ranges={predefinedRanges}
+        shouldDisableDate={beforeToday()}
+        placeholder={"Today"}
+        format="dd.MM.yyyy"
+        character=" - "
+        size="lg"
+        isoWeek={true}
+        onOk={([from, to]) => selectDateRange([from, to])}
+        onShortcutClick={(shortcut) =>
+          selectDateRange(shortcut.value as [Date, Date])
+        }
+        onClean={() =>
+          selectDateRange([new Date(), new Date()])
+        }
+        className="w-full"
+      />
+    </div>
   );
 }
