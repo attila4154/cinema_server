@@ -14,7 +14,6 @@ export async function submitLoginForm(
   const password = formData.get("password") as string;
 
   if (!email || !password) {
-    // todo:
     return { error: "missing values" };
   }
 
@@ -24,11 +23,11 @@ export async function submitLoginForm(
   });
 
   if (res.result === "not_found") {
-    return { error: "Email not found" };
+    return { error: "Email not found", email };
   }
 
   if (res.result === "wrong_pwd") {
-    return { error: "Wrong password" };
+    return { error: "Wrong password", email };
   }
 
   if (res.result === "ok") {

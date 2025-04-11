@@ -1,4 +1,5 @@
 import { OneDayScreening } from "@/ext/csfd";
+import Link from "next/link";
 import { useState } from "react";
 import { H4 } from "../styled/common";
 import {
@@ -12,15 +13,24 @@ type FilmProps = {
   year: number | undefined;
   length: string | undefined;
   countries: string[] | undefined;
+  id: number;
 };
 
 export function FilmInfo(filmData: FilmProps) {
+  const linkHeader = (
+    <Link
+      href={`https://www.csfd.cz/film/${filmData.id}`}
+      target="blank"
+    >
+      <H4>{filmData.filmName}</H4>
+    </Link>
+  );
   if (
     !filmData.year ||
     !filmData.length ||
     !filmData.countries
   )
-    return <H4>{filmData.filmName}</H4>;
+    return linkHeader;
 
   const country = filmData.countries.join(", ");
   const data = [
@@ -30,7 +40,7 @@ export function FilmInfo(filmData: FilmProps) {
   ].join(", ");
   return (
     <div>
-      <H4>{filmData.filmName}</H4>
+      {linkHeader}
       <div className="text-sm md:text-lg">{data}</div>
     </div>
   );
@@ -57,6 +67,7 @@ export function CinemaScreenings({
           year={data.year}
           length={data.length}
           countries={data.countries}
+          id={data.filmId}
         />
         {data.screeningTimes.length === 1 ? (
           <ScreeningTimePill

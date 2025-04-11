@@ -95,8 +95,9 @@ export function MorePills({
 }) {
   return (
     <ul
+    // todo: animation
       className={`flex flex-row gap-1 flex-wrap transition-all overflow-clip ${
-        isOpen ? "h-9 " : "h-0 "
+        isOpen ? "h-auto " : "h-0 "
       }`}
     >
       {screenings.map((s) => (
