@@ -15,7 +15,7 @@ export function CinemaScreeningCard({
 }: Props) {
   return (
     <>
-      <H2 className="sticky top-0 pt-2 pb-2 z-[2] bg-black">
+      <H2 className="sticky md:top-0 top-14 pt-2 pb-2 z-[2] bg-black">
         {cinema?.url && (
           <Link
             target="_blank"

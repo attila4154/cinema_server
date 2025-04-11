@@ -1,4 +1,5 @@
 "use client";
+import { COLOR_PRIMARY } from "@/app/global";
 import { SearchBar } from "../SearchBar";
 import { FilterButton } from "./FilterButton";
 import { MenuButton } from "./MenuButton";
@@ -10,9 +11,10 @@ export function Header({
   onSearch: (q: string) => void;
   children: React.ReactNode;
 }) {
-  // const authState = await getAuthState();
   return (
-    <header className="grid md:grid-cols-subgrid md:col-span-3 items-center md:mb-5 mb-2 md:mt-5 mt-2 grid-cols-[1fr_3fr_1fr]">
+    <header
+      className={`z-[3] grid md:grid-cols-subgrid md:col-span-3 items-center md:pb-5 pb-2 md:pt-5 pt-2 grid-cols-[1fr_3fr_1fr] sticky top-0 ${COLOR_PRIMARY}`}
+    >
       <div className="flex items-center h-full justify-center md:justify-start md:pl-4">
         <MenuButton />
       </div>

@@ -25,21 +25,9 @@ export const CinemaDataContext = createContext<Cinema[]>(
   []
 );
 
-// function StickyWrapper({
-//   children,
-//   className,
-// }: {
-//   children: React.ReactNode;
-//   className?: string;
-// }) {
-//   return (
-//     <div
-//       className={`block md:sticky md:top-12 md:overflow-auto md:h-[100vh] ${className}`}
-//     >
-//       {children}
-//     </div>
-//   );
-// }
+export const AuthStateContext = createContext<AuthState>(
+  {} as AuthState
+);
 
 export type FilterData = {
   minYear: number;
@@ -108,16 +96,8 @@ export function HomePageClient({
     [setFilters]
   );
 
-  function onCinemaListUpdate(
-    updater: (prev: number[]) => number[]
-  ) {
-    setFilters((prev) => {
-      return { ...prev, cinemas: updater(prev.cinemas) };
-    });
-  }
-
   return (
-    <>
+    <AuthStateContext.Provider value={authState}>
       <main className="flex flex-col md:grid md:grid-rows-[auto_auto] md:grid-cols-[1fr_3fr_1fr]">
         <Header onSearch={onSearch}>
           <CinemaDataContext.Provider value={allCinemas}>
@@ -135,26 +115,13 @@ export function HomePageClient({
           <div></div>
           <AllScreenings
             screenings={screenings}
-            // onSearch={onSearch}
+            // todo: it's dumb that I pass it as a param and not use from context
             cinemas={allCinemas}
           />
           <div className="hidden md:block"></div>
         </div>
-
-        {/* <div className="grid auto-rows-auto md:grid-cols-[1fr_2fr_1fr] md:pt-12 pt-2 gap-5 mb-5 md:pr-0 md:pl-0 pr-2 pl-2 min-w-[100vw] max-w-[100vw]">
-        <StickyWrapper className="md:order-3 order-2">
-          <MyCinemasMobileWrapper>
-            <MyCinemas
-              allCinemas={allCinemas}
-              userCinemaIds={filters.cinemas}
-              setUserCinemaIds={onCinemaListUpdate}
-              authState={authState}
-            />
-          </MyCinemasMobileWrapper>
-        </StickyWrapper>
-      </div> */}
       </main>
       <div id="screening-modal" className="contents"></div>
-    </>
+    </AuthStateContext.Provider>
   );
 }

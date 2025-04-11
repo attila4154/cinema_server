@@ -64,7 +64,7 @@ export function LanguageFilter({
         name="language"
         id="language-select"
         value={language || "all"}
-        className="rounded-md p-[6px] border border-[#3c3f43]"
+        className="rounded-md p-[6px] border border-[#3c3f43] bg-[#1a1d24]"
         onChange={handleSelectLanguage}
       >
         {languageOptions.map((option) => (

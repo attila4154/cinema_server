@@ -76,7 +76,7 @@ export function YearRangeSelector({
               parseInt(e.currentTarget.value)
             )
           }
-          className="w-20 md:p-2 p-1 border rounded text-center border-[#3c3f43]"
+          className="w-20 md:p-2 p-1 border rounded text-center border-[#3c3f43] bg-[#1a1d24]"
         />
         <span className="font-bold">to</span>
         <input
@@ -91,7 +91,7 @@ export function YearRangeSelector({
               parseInt(e.currentTarget.value)
             )
           }
-          className="w-20 md:p-2 p-1 border rounded text-center border-[#3c3f43]"
+          className="w-20 md:p-2 p-1 border rounded text-center border-[#3c3f43] bg-[#1a1d24] "
         />
       </div>
 
