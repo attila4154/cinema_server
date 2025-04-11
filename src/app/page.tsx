@@ -5,7 +5,6 @@ import {
 } from "./service/authorizationService";
 import {
   getCachedCinemas,
-  getCachedFilmData,
   getCachedScreenings,
 } from "./service/cachingService";
 import { getCinemasForUser } from "./service/db/cinemaService";
@@ -20,7 +19,6 @@ export default async function Home() {
   const userCinemaIds = await getCinemas(authState);
   const allCinemas = await getCachedCinemas();
   const allScreenings = await getCachedScreenings();
-  const filmData = await getCachedFilmData();
 
   return (
     <HomePageClient
@@ -28,7 +26,6 @@ export default async function Home() {
       authState={authState}
       initialUserCinemaIds={userCinemaIds}
       allCinemas={allCinemas}
-      filmData={filmData}
     />
   );
 }
