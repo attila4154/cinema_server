@@ -2,12 +2,52 @@ import {
   COLOR_PRIMARY,
   COLOR_SECONDARY,
 } from "@/app/global";
+import { AddToCalendarButton } from "add-to-calendar-button-react";
+import moment from "moment";
 import { useEffect, useMemo, useRef } from "react";
 import { H3, H4 } from "../styled/common";
 import {
   pillClassName,
   ScreeningProps,
 } from "./screeningTimePills";
+
+// todo: some 
+function CalendarButton({
+  cinemaName,
+  filmName,
+  date,
+  time,
+  length,
+}: ScreeningProps) {
+  const momentDateStart = moment(
+    `${date} ${time}`,
+    "DD.MM.YYYY HH:mm"
+  );
+  const momentDateEnd = momentDateStart.add(
+    length ?? 90,
+    "minutes"
+  );
+  return (
+    <div>
+      <AddToCalendarButton
+        name={`${cinemaName}: ${filmName}`}
+        options={["Apple", "Google", "iCal"]}
+        location={cinemaName}
+        startDate={momentDateStart.format("YYYY-MM-DD")}
+        endDate={momentDateEnd.format("YYYY-MM-DD")}
+        startTime={time}
+        endTime={momentDateEnd.format("HH:mm")}
+        timeZone="Europe/Prague"
+        buttonsList
+        size="10"
+        buttonStyle="round"
+        hideTextLabelButton
+        trigger="click"
+        lightMode="dark"
+      ></AddToCalendarButton>
+    </div>
+  );
+}
 
 function ScreeningInfo(props: ScreeningProps) {
   return (
@@ -34,6 +74,7 @@ function ScreeningInfo(props: ScreeningProps) {
         >
           Go to website
         </button>
+        <CalendarButton {...props} />
       </div>
     </div>
   );

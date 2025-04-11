@@ -75,6 +75,7 @@ export function CinemaScreenings({
             filmName={data.filmName}
             cinemaName={cinemaName}
             date={date}
+            length={data.length}
           />
         ) : (
           <MoreScreeningTimePills
