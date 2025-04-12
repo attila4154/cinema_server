@@ -64,6 +64,7 @@ export function MoreScreeningTimePills({
   }
 
   // todo: adjust height
+  // todo: animate width change
   return isOpen ? (
     <button className={pillClassName} onClick={close}>
       <Image
@@ -97,8 +98,8 @@ export function MorePills({
   return (
     <ul
       // todo: animation
-      className={`flex flex-row gap-1 flex-wrap transition-all overflow-clip ${
-        isOpen ? "h-auto " : "h-0 "
+      className={`flex flex-row gap-1 flex-wrap transition-all overflow-hidden ${
+        isOpen ? "h-auto " : "h-0"
       }`}
     >
       {screenings.map((s) => (
