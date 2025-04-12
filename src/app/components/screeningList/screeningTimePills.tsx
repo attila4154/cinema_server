@@ -102,9 +102,9 @@ export function MorePills({
       }`}
     >
       {screenings.map((s) => (
-        <li key={s}>
+        <li key={filmName + s}>
           <ScreeningTimePill
-            time={filmName + s}
+            time={s}
             filmName={filmName}
             cinemaName={cinemaName}
             date={date}
