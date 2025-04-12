@@ -53,24 +53,22 @@ function getFilterData(
 
 export function HomePageClient({
   initialScreenings,
-  authState,
   initialUserCinemaIds,
   allCinemas,
 }: {
   initialScreenings: CinemaScreeningData[];
-  authState: AuthState;
   initialUserCinemaIds: number[];
   allCinemas: Cinema[];
 }) {
   const { maxYear, minYear } = getFilterData(
     initialScreenings
   );
-  const [filters, setFilters] = useState<Filters>({
+  const [filters, setFilters] = useState<Filters>(() => ({
     groupBy: "cinema",
     dateRange: [new Date(), new Date()],
     cinemas: initialUserCinemaIds,
     years: [minYear, maxYear],
-  });
+  }));
 
   const [screenings, setScreenings] = useState(() =>
     applyFilters(
@@ -97,7 +95,7 @@ export function HomePageClient({
   );
 
   return (
-    <AuthStateContext.Provider value={authState}>
+    <>
       <main className="flex flex-col md:grid md:grid-rows-[auto_auto] md:grid-cols-[1fr_3fr_1fr]">
         <Header onSearch={onSearch}>
           <CinemaDataContext.Provider value={allCinemas}>
@@ -122,6 +120,6 @@ export function HomePageClient({
         </div>
       </main>
       <div id="screening-modal" className="contents"></div>
-    </AuthStateContext.Provider>
+    </>
   );
 }

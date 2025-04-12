@@ -10,7 +10,7 @@ function DeleteQueryButton({
   return (
     <button
       onClick={handleClick}
-      className="hover:border-1 hover:bg-slate-200 rounded-md transition-all"
+      className={`hover:bg-zinc-900 rounded-md transition-all`}
     >
       <Image
         src="/cross.svg"

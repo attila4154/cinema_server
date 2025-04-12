@@ -4,6 +4,7 @@ import {
   OneDayScreening,
 } from "@/ext/csfd";
 import Fuse from "fuse.js";
+import Cookies from "js-cookie";
 import { Dispatch, SetStateAction } from "react";
 import MyCinemas from "../MyCinemas";
 import { applyDateSelect, DateFilter } from "./DateFilter";
@@ -116,6 +117,7 @@ export function FilterBar({ filters, setFilters }: Props) {
   ) {
     setFilters((prev) => {
       const newCinemaIds = updater(prev.cinemas);
+      Cookies.set("cinemaIds", newCinemaIds.join(","));
       return { ...prev, cinemas: newCinemaIds };
     });
   }

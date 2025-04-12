@@ -3,17 +3,13 @@ import {
   COLOR_SECONDARY,
 } from "@/app/global";
 import Image from "next/image";
-import Link from "next/link";
 import {
-  useContext,
   useEffect,
   useMemo,
   useRef,
   useState,
 } from "react";
 import { createPortal } from "react-dom";
-import { AuthStateContext } from "../HomePageClient";
-import { LogoutButton } from "../LogoutButton";
 
 // todo: move into one modal component
 export function MenuButton() {
@@ -56,8 +52,6 @@ function MenuModal({
 }) {
   const modalRef = useRef<HTMLDialogElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-
-  const authState = useContext(AuthStateContext);
 
   const animations = useMemo(
     () => ({
@@ -117,10 +111,10 @@ function MenuModal({
         className={`${COLOR_PRIMARY} -translate-x-[20vw] transition-all duration-500 rounded-xl p-5 h-full overflow-scroll self-start`}
         onClick={(e) => e.preventDefault()}
       >
-        {!authState.loggedIn && (
+        {/* {!authState.loggedIn && (
           <Link href="/authorize/login">Login</Link>
         )}
-        {authState.loggedIn && <LogoutButton />}
+        {authState.loggedIn && <LogoutButton />} */}
       </div>
     </dialog>
   );
