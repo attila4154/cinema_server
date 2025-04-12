@@ -82,6 +82,9 @@ export function CinemaScreenings({
             isOpen={isOpen}
             setIsOpen={setIsOpen}
             screenings={data.screeningTimes}
+            filmName={data.filmName}
+            cinemaName={cinemaName}
+            date={date}
           />
         )}
       </div>
