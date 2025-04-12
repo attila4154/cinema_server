@@ -47,12 +47,22 @@ function extractScreeningData(dayScreening: Element) {
   const screenings = [
     ...dayScreening.querySelectorAll("tr"),
   ].map((screening) => {
+    const filmData = extractFilmData(screening);
+
     const screeningTimes = [
       ...screening.querySelectorAll("td.td-time"),
-    ].map((timeCol) => timeCol.textContent!.trim());
+    ]
+      .map((timeCol) => timeCol.textContent!.trim())
+      // each screening cell might have more values e.g. '10:00 10:30'
+      // because of using textContent before the value could be '10:00\n\t\t\t10:30'
+      .flatMap(
+        (screeningCellValue) =>
+          screeningCellValue.match(/\b\d{1,2}:\d{2}\b/g) ||
+          []
+      );
 
     return {
-      ...extractFilmData(screening),
+      ...filmData,
       screeningTimes,
     };
   });
