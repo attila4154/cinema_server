@@ -1,31 +1,30 @@
+import { cookies } from "next/headers";
 import { HomePageClient } from "./components/HomePageClient";
-import {
-  AuthState,
-  getAuthState,
-} from "./service/authorizationService";
 import {
   getCachedCinemas,
   getCachedScreenings,
 } from "./service/cachingService";
-import { getCinemasForUser } from "./service/db/cinemaService";
 
-async function getCinemas(authState: AuthState) {
-  if (!authState.loggedIn) return [];
-  return await getCinemasForUser(authState.user.id);
+async function getCinemas() {
+  const cookieStore = await cookies();
+  return (
+    cookieStore
+      .get("cinemaIds")
+      ?.value.split(",")
+      .map((id) => +id) || []
+  );
 }
 
 export default async function Home() {
-  const authState = await getAuthState();
-  const userCinemaIds = await getCinemas(authState);
+  const userCinemaIds = await getCinemas();
   const allCinemas = await getCachedCinemas();
   const allScreenings = await getCachedScreenings();
 
   return (
     <HomePageClient
       initialScreenings={allScreenings}
-      authState={authState}
-      initialUserCinemaIds={userCinemaIds}
       allCinemas={allCinemas}
+      initialUserCinemaIds={userCinemaIds}
     />
   );
 }

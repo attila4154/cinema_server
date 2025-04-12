@@ -9,6 +9,7 @@ export default function Loading() {
         alt=""
         width={50}
         height={50}
+        unoptimized
       />
     </main>
   );
