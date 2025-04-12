@@ -44,10 +44,7 @@ export function CinemaOneDayScreenings({
       <hr />
       <ul className="flex flex-col">
         {data.screenings.map((s, idx) => (
-          <li
-            key={`${s.filmId}${s.screeningTimes}`}
-            className="flex flex-col"
-          >
+          <li key={idx} className="flex flex-col">
             <CinemaScreenings
               data={s}
               date={data.date}
