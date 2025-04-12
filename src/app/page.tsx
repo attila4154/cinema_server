@@ -4,6 +4,7 @@ import {
   getCachedCinemas,
   getCachedScreenings,
 } from "./service/cachingService";
+import { Watchlist } from "./service/cookieWatchlistService";
 
 async function getCinemas() {
   const cookieStore = await cookies();
@@ -15,8 +16,20 @@ async function getCinemas() {
   );
 }
 
+async function getWatchlist() {
+  const cookieStore = await cookies();
+  const wathclistCookie =
+    cookieStore.get("watchlist")?.value;
+  if (!wathclistCookie) {
+    return [];
+  }
+
+  return JSON.parse(wathclistCookie) as Watchlist;
+}
+
 export default async function Home() {
   const userCinemaIds = await getCinemas();
+  const userWatchlist = await getWatchlist();
   const allCinemas = await getCachedCinemas();
   const allScreenings = await getCachedScreenings();
 
@@ -25,6 +38,7 @@ export default async function Home() {
       initialScreenings={allScreenings}
       allCinemas={allCinemas}
       initialUserCinemaIds={userCinemaIds}
+      initialWatchlist={userWatchlist}
     />
   );
 }

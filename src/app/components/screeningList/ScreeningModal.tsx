@@ -4,14 +4,21 @@ import {
 } from "@/app/global";
 import { AddToCalendarButton } from "add-to-calendar-button-react";
 import moment from "moment";
-import { useEffect, useMemo, useRef } from "react";
+import Image from "next/image";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { H3, H4 } from "../styled/common";
 import {
   pillClassName,
   ScreeningProps,
 } from "./screeningTimePills";
 
-// todo: some 
+// todo: some
 function CalendarButton({
   cinemaName,
   filmName,
@@ -49,7 +56,67 @@ function CalendarButton({
   );
 }
 
-function ScreeningInfo(props: ScreeningProps) {
+const MODAL_BUTTON_CLASSNAMES = `${COLOR_SECONDARY} rounded-full p-2 border-2 min-h-12`;
+
+function ToggleWatchlistButton(props: ScreeningModalProps) {
+  const [animating, setAnimating] = useState(false);
+  const handleClick = useCallback(() => {
+    setAnimating(true);
+    setTimeout(() => {
+      if (props.inWatchlist) {
+        props.handleRemoveFromWatchlist();
+      } else {
+        props.handleAddToWatchlist();
+      }
+      setAnimating(false);
+    }, 200);
+  }, [props]);
+
+  return (
+    <button
+      // todo: nice to make the button bigger on hover
+      className={`${MODAL_BUTTON_CLASSNAMES} transition-all duration-200
+        ${
+          animating &&
+          "!border-red-500 !shadow-[0_0_15px_0_#ef4444]"
+        }
+        ${
+          props.inWatchlist &&
+          "border-red-700 shadow-[0_0_5px_0_#ef4444]"
+        }
+        flex flex-row items-center justify-center border-[#2C2C2C]
+      `}
+      onClick={handleClick}
+    >
+      <span
+        className={`transition-all duration-200 transform
+         ${
+           animating
+             ? "opacity-0 scale-90"
+             : "opacity-100 scale-100"
+         }`}
+      >
+        {props.inWatchlist
+          ? "Remove from watchlist"
+          : "Want to watch"}
+      </span>
+      <span
+        className={`absolute right-8 transition-transform duration-150 ${
+          props.inWatchlist ? "scale-100" : "scale-0"
+        }`}
+      >
+        <Image
+          src="/heart.svg"
+          width={20}
+          height={20}
+          alt=""
+        />
+      </span>
+    </button>
+  );
+}
+
+function ScreeningInfo(props: ScreeningModalProps) {
   return (
     <div className="flex flex-col gap-5 mb-5">
       <div>
@@ -64,13 +131,10 @@ function ScreeningInfo(props: ScreeningProps) {
       </div>
       <hr />
       <div className="grid grid-rows-[1fr_1fr] text-lg gap-2">
+        <ToggleWatchlistButton {...props} />
         <button
-          className={`${COLOR_SECONDARY} rounded-full p-2 inline-block`}
-        >
-          Want to watch
-        </button>
-        <button
-          className={`${COLOR_SECONDARY} rounded-full p-2`}
+          className={`${COLOR_SECONDARY} rounded-full p-2 text-gray-400`}
+          disabled
         >
           Go to website
         </button>
@@ -80,10 +144,14 @@ function ScreeningInfo(props: ScreeningProps) {
   );
 }
 
-export function ScreeningModal({
-  handleClose,
-  ...props
-}: ScreeningProps & { handleClose: () => void }) {
+type ScreeningModalProps = ScreeningProps & {
+  inWatchlist: boolean;
+  handleClose: () => void;
+  handleAddToWatchlist: () => void;
+  handleRemoveFromWatchlist: () => void;
+};
+
+export function ScreeningModal(props: ScreeningModalProps) {
   const contentRef = useRef<HTMLDivElement>(null);
   const modalRef = useRef<HTMLDialogElement>(null);
   const animations = useMemo(
@@ -104,13 +172,13 @@ export function ScreeningModal({
       },
       slideOn: () => {
         contentRef?.current?.classList.remove(
-          "translate-y-[40vh]"
+          "translate-y-[60vh]"
         );
         contentRef?.current?.classList.add("translate-y-0");
       },
       slideOff: () => {
         contentRef?.current?.classList.add(
-          "translate-y-[40vh]"
+          "translate-y-[60vh]"
         );
         contentRef?.current?.classList.remove(
           "translate-y-0"
@@ -124,20 +192,20 @@ export function ScreeningModal({
     setTimeout(() => {
       animations.backdropOn();
       animations.slideOn();
-    }, 1);
+    }, 0);
   }, [animations]);
 
   function onClose() {
     animations.backdropOff();
     animations.slideOff();
-    setTimeout(() => handleClose(), 500);
+    setTimeout(() => props.handleClose(), 500);
   }
 
   return (
     <dialog
       ref={modalRef}
       open={true}
-      className="z-50 w-full top-0 left-0 h-full transition-all backdrop-blur-none duration-250 flex flex-col backdrop:bg-black/50 bg-black/10 justify-end items-center fixed ease-in-out"
+      className="z-50 w-full top-0 left-0 h-full transition-all backdrop-blur-none duration-500 flex flex-col backdrop:bg-black/50 bg-black/10 justify-end items-center fixed ease-in-out"
       onClose={onClose}
       onClick={(e) => {
         if (e.target === modalRef.current) onClose();
@@ -145,7 +213,7 @@ export function ScreeningModal({
     >
       <div
         ref={contentRef}
-        className={`${COLOR_PRIMARY} translate-y-[40vh] text-white transition-all duration-500 rounded-xl p-3 w-full md:w-[50%]`}
+        className={`${COLOR_PRIMARY} translate-y-[60vh] text-white transition-all duration-500 rounded-xl p-3 w-full md:w-[50%]`}
         onClick={(e) => e.preventDefault()}
       >
         <ScreeningInfo {...props} />
