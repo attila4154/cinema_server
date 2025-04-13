@@ -13,6 +13,10 @@ import {
   LanguageFilter,
 } from "./LanguageFilter";
 import {
+  applyWatchlist,
+  WatchlistCheckbox,
+} from "./WatchlistCheckbox";
+import {
   applyYearRangeFilter,
   YearRangeSelector,
 } from "./YearFilter";
@@ -25,6 +29,7 @@ export type Filters = {
   groupBy?: "cinema" | "film";
   cinemas: number[];
   search?: string;
+  applyWatchlist: boolean;
 };
 
 // todo: consider changing screening list in place because it's cloned every time anyway
@@ -73,14 +78,43 @@ function applySearchFilter(
   }));
 }
 
+function removeEmpty(
+  screenings: CinemaScreeningData[]
+): CinemaScreeningData[] {
+  screenings = screenings.map((s) => ({
+    ...s,
+    screenings: s.screenings.map((s) => ({
+      ...s,
+      screenings: s.screenings.filter(
+        (s) => s.screeningTimes.length !== 0
+      ),
+    })),
+  }));
+
+  screenings = screenings.map((s) => ({
+    ...s,
+    screenings: s.screenings.filter(
+      (s) => s.screenings.length !== 0
+    ),
+  }));
+
+  screenings = screenings.filter(
+    (s) => s.screenings.length !== 0
+  );
+
+  return screenings;
+}
+
+// todo: time this?
 export function applyFilters(
   screenings: CinemaScreeningData[],
   filters: Filters
 ): CinemaScreeningData[] {
-  let filtered = applyDateSelect(
+  let filtered = applyWatchlist(
     screenings,
-    filters.dateRange
+    filters.applyWatchlist
   );
+  filtered = applyDateSelect(filtered, filters.dateRange);
   filtered = applyLanguageFilter(
     filtered,
     filters.language
@@ -89,6 +123,8 @@ export function applyFilters(
   filtered = applyCinemasFilter(filtered, filters.cinemas);
   filtered = applySearchFilter(filtered, filters.search);
   filtered = applyYearRangeFilter(filtered, filters.years);
+
+  filtered = removeEmpty(filtered);
   return filtered;
 }
 
@@ -112,11 +148,19 @@ export function FilterBar({ filters, setFilters }: Props) {
     setFilters((prev) => ({ ...prev, years }));
   }
 
+  function handleApplyWatchlist(toggled: boolean) {
+    setFilters((prev) => ({
+      ...prev,
+      applyWatchlist: toggled,
+    }));
+  }
+
   function handleCinemaListUpdate(
     updater: (ids: number[]) => number[]
   ) {
     setFilters((prev) => {
       const newCinemaIds = updater(prev.cinemas);
+      // todo: fix it!!! side effect in set function
       Cookies.set("cinemaIds", newCinemaIds.join(","));
       return { ...prev, cinemas: newCinemaIds };
     });
@@ -135,6 +179,10 @@ export function FilterBar({ filters, setFilters }: Props) {
       <YearRangeSelector
         range={filters.years}
         setDateFilterRange={handleSelectYearRange}
+      />
+      <WatchlistCheckbox
+        toggled={filters.applyWatchlist}
+        setToggled={handleApplyWatchlist}
       />
       <MyCinemas
         userCinemaIds={filters.cinemas}
