@@ -73,22 +73,48 @@ function applySearchFilter(
   }));
 }
 
+function toLog() {
+  if (localStorage === undefined) {
+    return true;
+  }
+
+  return localStorage.getItem("logging") === "true";
+}
+
 export function applyFilters(
   screenings: CinemaScreeningData[],
   filters: Filters
 ): CinemaScreeningData[] {
+  if (toLog()) {
+    console.log(screenings);
+  }
   let filtered = applyDateSelect(
     screenings,
     filters.dateRange
   );
+  if (toLog()) {
+    console.log("after date select:", filtered);
+  }
   filtered = applyLanguageFilter(
     filtered,
     filters.language
   );
+  if (toLog()) {
+    console.log("after language filter:", filtered);
+  }
 
   filtered = applyCinemasFilter(filtered, filters.cinemas);
+  if (toLog()) {
+    console.log("after cinemas filter:", filtered);
+  }
   filtered = applySearchFilter(filtered, filters.search);
+  if (toLog()) {
+    console.log("after search filter:", filtered);
+  }
   filtered = applyYearRangeFilter(filtered, filters.years);
+  if (toLog()) {
+    console.log("after year range filter:", filtered);
+  }
   return filtered;
 }
 
