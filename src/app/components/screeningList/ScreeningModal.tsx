@@ -78,7 +78,7 @@ function ToggleWatchlistButton(props: ScreeningModalProps) {
       className={`${MODAL_BUTTON_CLASSNAMES} transition-all duration-200
         ${
           animating &&
-          "!border-red-500 !shadow-[0_0_15px_0_#ef4444]"
+          "!border-red-500 !shadow-[0_0_15px_0_#ef4444] bg-[#4a2e2e]"
         }
         ${
           props.inWatchlist &&
@@ -102,7 +102,9 @@ function ToggleWatchlistButton(props: ScreeningModalProps) {
       </span>
       <span
         className={`absolute right-8 transition-transform duration-150 ${
-          props.inWatchlist ? "scale-100" : "scale-0"
+          props.inWatchlist
+            ? "scale-100"
+            : "scale-0 translate-y-4"
         }`}
       >
         <Image
@@ -175,6 +177,10 @@ export function ScreeningModal(props: ScreeningModalProps) {
           "translate-y-[60vh]"
         );
         contentRef?.current?.classList.add("translate-y-0");
+        contentRef?.current?.classList.replace(
+          "scale-x-50",
+          "scale-none"
+        );
       },
       slideOff: () => {
         contentRef?.current?.classList.add(
@@ -182,6 +188,10 @@ export function ScreeningModal(props: ScreeningModalProps) {
         );
         contentRef?.current?.classList.remove(
           "translate-y-0"
+        );
+        contentRef.current?.classList.replace(
+          "scale-none",
+          "scale-x-50"
         );
       },
     }),
@@ -213,7 +223,7 @@ export function ScreeningModal(props: ScreeningModalProps) {
     >
       <div
         ref={contentRef}
-        className={`${COLOR_PRIMARY} translate-y-[60vh] text-white transition-all duration-500 rounded-xl p-3 w-full md:w-[50%]`}
+        className={`${COLOR_PRIMARY} translate-y-[60vh] scale-x-50 text-white transition-all duration-500 rounded-xl p-3 w-full md:w-[50%]`}
         onClick={(e) => e.preventDefault()}
       >
         <ScreeningInfo {...props} />

@@ -8,12 +8,12 @@ import { Watchlist } from "./service/cookieWatchlistService";
 
 async function getCinemas() {
   const cookieStore = await cookies();
-  return (
-    cookieStore
-      .get("cinemaIds")
-      ?.value.split(",")
-      .map((id) => +id) || []
-  );
+  const value = cookieStore.get("cinemaIds");
+  if (!value?.value) {
+    return [];
+  }
+
+  return value.value.split(",").map((id) => +id);
 }
 
 async function getWatchlist() {
