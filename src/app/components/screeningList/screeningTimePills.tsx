@@ -1,11 +1,11 @@
-import { useWatchlist } from "@/app/context/watchlistContext";
 import {
-  addToWatchlist as addToCookieWatchlist,
+  addToWatchlist,
   findScreening,
-  removeFromWatchlist as removeFromCookieWatchlist,
+  removeFromWatchlist,
 } from "@/app/service/cookieWatchlistService";
 import Image from "next/image";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useContext, useState } from "react";
+import { WatchlistContext } from "../HomePageClient";
 import { ScreeningModal } from "./ScreeningModal";
 
 export const pillClassName =
@@ -23,12 +23,10 @@ export type ScreeningProps = {
 // todo: to take a look: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dialog#animating_dialogs
 // todo: move to modal component
 export function ScreeningTimePill(props: ScreeningProps) {
-  const watchlistContext = useWatchlist();
-  const inWatchlist = useMemo(
+  const initialWatchlist = useContext(WatchlistContext);
+  const [inWatchlist, setInWatchlist] = useState(
     () =>
-      findScreening(props, watchlistContext.watchlist) !==
-      undefined,
-    [watchlistContext, props]
+      findScreening(props, initialWatchlist) !== undefined
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -43,14 +41,14 @@ export function ScreeningTimePill(props: ScreeningProps) {
   }
 
   const handleAddToWatchlist = useCallback(() => {
-    addToCookieWatchlist(props);
-    watchlistContext.add(props);
-  }, [props, watchlistContext]);
+    setInWatchlist(true);
+    addToWatchlist(props);
+  }, [props]);
 
   const handleRemoveFromWatchlist = useCallback(() => {
-    removeFromCookieWatchlist(props);
-    watchlistContext.remove(props);
-  }, [props, watchlistContext]);
+    setInWatchlist(false);
+    removeFromWatchlist(props);
+  }, [props]);
 
   return (
     <>
@@ -101,28 +99,20 @@ export function MoreScreeningTimePills({
   cinemaName: string;
   date: string;
 }) {
-  const watchlistContext = useWatchlist();
-  const someInWatchlist = useMemo(
-    () =>
-      screenings.some(
-        (s) =>
-          findScreening(
-            {
-              cinemaName,
-              filmName,
-              date,
-              time: s,
-            },
-            watchlistContext.watchlist
-          ) !== undefined
-      ),
-    [
-      screenings,
-      cinemaName,
-      filmName,
-      date,
-      watchlistContext,
-    ]
+  // todo: for now this adding some screening inside this list won't update hasInWatchlist, only on reload
+  // but for now it's def not a prio
+  const initialWatchlist = useContext(WatchlistContext);
+  const hasInWatchlist = screenings.some(
+    (s) =>
+      findScreening(
+        {
+          cinemaName,
+          filmName,
+          date,
+          time: s,
+        },
+        initialWatchlist
+      ) !== undefined
   );
   const n = screenings.length;
 
@@ -150,7 +140,7 @@ export function MoreScreeningTimePills({
     <button className={pillClassName} onClick={open}>
       <span>{screenings[0]}&nbsp;</span>
       <span
-        className={`${someInWatchlist && "text-red-500"}`}
+        className={`${hasInWatchlist && "text-red-500"}`}
       >
         +{n - 1}
       </span>
