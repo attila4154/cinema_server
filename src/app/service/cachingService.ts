@@ -41,7 +41,7 @@ export async function udpateCache(): Promise<boolean> {
 export const getCachedScreenings = unstable_cache(
   async () => await parseScreenings(),
   [],
-  { revalidate: 12 * 60 * 60 }
+  { revalidate: 1 * 60 }
 );
 
 export const getCachedCinemas = unstable_cache(
