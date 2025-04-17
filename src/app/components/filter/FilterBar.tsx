@@ -74,7 +74,7 @@ function applySearchFilter(
 }
 
 function toLog() {
-  if (localStorage === undefined) {
+  if (typeof localStorage === "undefined") {
     return true;
   }
 
