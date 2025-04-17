@@ -7,7 +7,6 @@ import {
   useEffect,
   useState,
 } from "react";
-import { WatchlistProvider } from "../context/watchlistContext";
 import { AuthState } from "../service/authorizationService";
 import { Watchlist } from "../service/cookieWatchlistService";
 import { Cinema } from "../util/http";
@@ -29,6 +28,10 @@ export const CinemaDataContext = createContext<Cinema[]>(
 
 export const AuthStateContext = createContext<AuthState>(
   {} as AuthState
+);
+
+export const WatchlistContext = createContext<Watchlist>(
+  []
 );
 
 export type FilterData = {
@@ -72,7 +75,6 @@ export function HomePageClient({
     dateRange: [new Date(), new Date()],
     cinemas: initialUserCinemaIds,
     years: [minYear, maxYear],
-    applyWatchlist: false,
   }));
 
   const [screenings, setScreenings] = useState(() =>
@@ -84,7 +86,6 @@ export function HomePageClient({
 
   useEffect(() => {
     console.log("ue2");
-    console.log(filters);
     setScreenings(() =>
       applyFilters(
         structuredClone(initialScreenings),
@@ -117,15 +118,15 @@ export function HomePageClient({
         </Header>
         <div className="bg-black/90 grid grid-cols-subgrid col-span-3 pt-5">
           <div></div>
-          <WatchlistProvider
-            initialWatchlist={initialWatchlist}
+          <WatchlistContext.Provider
+            value={initialWatchlist}
           >
             <AllScreenings
               screenings={screenings}
               // todo: it's dumb that I pass it as a param and not use from context
               cinemas={allCinemas}
             />
-          </WatchlistProvider>
+          </WatchlistContext.Provider>
           <div className="hidden md:block"></div>
         </div>
       </main>
